@@ -1,20 +1,9 @@
-# SPACE HPC Visualization Workshop
+# EDUCADO Training Course: SLURM
 
-- [Start Presentation](https://bernddoser.github.io/SPACE_HPC_Visualization_Workshop/)
-- [Run demo in Colab](https://colab.research.google.com/github/BerndDoser/SPACE_HPC_Visualization_Workshop/blob/main/colab/spherinator_illustris.ipynb)
+- [Start Presentation](https://bernddoser.github.io/EDUCADO_Slurm_Workshop)
 
-## Related Repositories
+## Related Links
 
-- [PEST](https://github.com/HITS-AIN/PEST): Data acquisition and preprocessing
-- [Spherinator](https://github.com/HITS-AIN/Spherinator): Representation Learning using PyTorch Lightning
-- [HiPSter](https://github.com/HITS-AIN/HiPSter): Generation of HiPS maps and catalogs
-
-## Demo using Illustris TNG SKIRT images
-
-- [Demo Spherinator](./demo_spherinator_illustris.ipynb)
-- [Demo HiPSter](./demo_hipster_illustris.ipynb)
-
-## Demo using Gaia XP DR3 spectra
-
-- [Demo Spherinator](./demo_spherinator_gaia.ipynb)
-- [Demo HiPSter](./demo_hipster_gaia.ipynb)
+- [SchedMD](https://www.schedmd.com): The Slurm company
+- [SLURM Documentation](https://slurm.schedmd.com/documentation.html)
+- [EDUCADO](https://research.iac.es/proyecto/educado): The EDUCADO project
