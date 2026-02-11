@@ -6,4 +6,5 @@
 
 - [SchedMD](https://www.schedmd.com): The Slurm company
 - [SLURM Documentation](https://slurm.schedmd.com/documentation.html)
-- [EDUCADO](https://research.iac.es/proyecto/educado): The EDUCADO project
+- [The EDUCADO Project](https://research.iac.es/proyecto/educado)
+- [EDUCADO–MWGaiaDN Training School on Astro–AI and Machine Learning](https://indico.global/event/16263/overview)
