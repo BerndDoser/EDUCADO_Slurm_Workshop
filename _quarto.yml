@@ -1,0 +1,16 @@
+title: SLURM
+subtitle: EDUCADO TRAINING COURSE
+author: Bernd Doser
+date: 2026/03/05
+date-format: "MMMM YYYY"
+institute: Heidelberg Institute for Theoretical Studies (HITS)
+format:
+  revealjs:
+    logo: images/HITS_RGB_eng.jpg
+    footer: "EDUCADO: SLURM (B. Doser)"
+    slide-number: true
+    highlight-style: a11y
+    bibliography: references.bib
+    width: 1300
+    menu: false
+    show-slide-number: print
