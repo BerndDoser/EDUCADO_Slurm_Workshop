@@ -1,11 +1,26 @@
-## Agenda
+## Workshop Agenda
+
+1.  **Part 1: Slurm Basics**
+    * Understanding HPC Clusters, Partitions and Resources
+    * Submitting Jobs and Monitoring Progress
+
+2.  **Part 2: Writing a Slurm Submission Script**
+    * The anatomy of a submission script
+    * Requesting resources (CPUs, memory, time)
+    * Handling output and error files
+
+3.  **Part 3: Streamflow**
+    * 
 
 
+# Part 1: Slurm Basics
 ## What is Slurm?
+
 Slurm (Simple Linux Utility for Resource Management) is an open-source, fault-tolerant, and highly scalable cluster management and job scheduling system.
 
 
 ## Core Concepts
+
 *   **Node**: A physical computer in the cluster.
 *   **Partition**: A logical group of nodes (e.g., `cpu`, `gpu`, `debug`).
 *   **Job**: A task submitted to the cluster.
@@ -13,6 +28,7 @@ Slurm (Simple Linux Utility for Resource Management) is an open-source, fault-to
 
 
 ## Interactive Mode
+
 Sometimes you want to test things interactively. You can use `srun` for this:
 
 ```bash
@@ -22,6 +38,7 @@ srun --partition=cpu --time=01:00:00 --pty bash
 
 
 ## Basic Workflow
+
 1.  **Prepare**: Write your code and a submission script.
 2.  **Submit**: Use `sbatch script.sh` to send your job to the queue.
 3.  **Monitor**: Use `squeue -u <username>` to check status.

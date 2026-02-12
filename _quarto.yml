@@ -1,8 +1,9 @@
-title: SLURM
-subtitle: EDUCADO TRAINING COURSE
+title: Simple Linux Utility for Resource Management (SLURM)
+subtitle: EDUCADO-MWGaiaDN Training School on Astro-AI and Machine Learning
 author: Bernd Doser
 date: 2026/03/05
-date-format: "MMMM YYYY"
+date-format: "MMMM D, YYYY"
+place: Ghent, Belgium
 institute: Heidelberg Institute for Theoretical Studies (HITS)
 format:
   revealjs:
