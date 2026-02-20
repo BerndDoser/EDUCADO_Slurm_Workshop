@@ -1,0 +1,20 @@
+.reveal .title {
+  color: white !important;
+}
+.reveal .subtitle {
+  color: white !important;
+}
+.reveal .quarto-title-author-name {
+  color: white !important;
+}
+.reveal .date {
+  color: white !important;
+}
+.reveal .quarto-title-affiliation {
+  color: white !important;
+}
+.reveal .slide-logo {
+  height: 10% !important;
+  max-height: unset !important;
+}
+

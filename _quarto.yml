@@ -5,6 +5,10 @@ date: 2026/03/05
 date-format: "MMMM D, YYYY"
 place: Ghent, Belgium
 institute: Heidelberg Institute for Theoretical Studies (HITS)
+title-slide-attributes:
+  data-background-image: images/jupyter.jpg
+  data-background-size: cover
+  data-background-opacity: "0.8"
 format:
   revealjs:
     logo: images/HITS_RGB_eng.jpg
@@ -15,3 +19,4 @@ format:
     width: 1300
     menu: false
     show-slide-number: print
+    css: styles.css
