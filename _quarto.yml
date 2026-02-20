@@ -15,6 +15,7 @@ format:
     footer: "EDUCADO: SLURM (B. Doser)"
     slide-number: true
     highlight-style: a11y
+    code-line-numbers: false
     bibliography: references.bib
     width: 1300
     menu: false
