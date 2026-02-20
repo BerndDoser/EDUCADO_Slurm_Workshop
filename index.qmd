@@ -18,7 +18,9 @@
 
 Slurm (Simple Linux Utility for Resource Management) is an open-source, fault-tolerant, and highly scalable cluster management and job scheduling system.
 
----> TODO nvidia
+TODO: brief history, NVIDIA's involvement, etc.
+
+@Jette2023
 
 ## Core Concepts
 
@@ -69,29 +71,25 @@ Sometimes a single job needs different resources for different parts (e.g., a ma
 
 ## MPI with Slurm
 
-Slurm is highly optimized for MPI jobs. Ideally, use `srun` (instead of `mpirun` or `mpiexec`) to launch parallel tasks across nodes.
-
-**Key Flags:**
-
-*   `--ntasks`: Total number of MPI ranks.
-*   `--nodes`: Number of nodes to spread the job across.
-*   `--ntasks-per-node`: Number of ranks (processes) per node.
-
-**Example `mpi_job.sh`:**
-
 ```bash
 #!/bin/bash
-#SBATCH --job-name=mpi_test
-#SBATCH --nodes=2
-#SBATCH --ntasks-per-node=4   # 8 total tasks across 2 nodes
-#SBATCH --time=00:10:00
+#SBATCH --nodes=2             # Request 2 nodes
+#SBATCH --ntasks-per-node=4   # Run 4 tasks per node (total 8 tasks)
+#SBATCH --time=1:00:00        # Set a time limit to 1 hour
 
 module load openmpi           # Load your MPI module
 srun ./my_mpi_program         # srun handles the launching
 ```
 
-**Why `srun`?**
-It directly communicates with Slurm to launch processes, propagates signals correctly (like cancelling a job), and ensures process binding respects your requests.
+::: {.callout-note title="Use `srun` (instead of `mpirun` or `mpiexec`) to launch parallel tasks across nodes."}
+It directly communicates with Slurm to launch processes, propagates signals correctly
+(like cancelling a job), and ensures process binding respects your requests.
+:::
+
+
+## HITS cluster
+
+![HITS cluster](images/hits-cluster.jpg)
 
 
 ## References
