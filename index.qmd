@@ -1,6 +1,6 @@
 ## Agenda
 
-::: {.incremental}
+<!-- ::: {.incremental} -->
 - Slurm Basics
   - Understanding HPC Clusters, Partitions and Resources
   - Submitting Jobs and Monitoring Progress
@@ -9,187 +9,20 @@
   - Parallel jobs across multiple nodes
 - Slurm with [StreamFlow](https://streamflow.di.unito.it/)
   - Heterogeneous jobs with different resource requirements
-:::
+<!-- ::: -->
 
 
-## What is Slurm?
+{{< include slides/hits-cascade-cluster.qmd >}}
+{{< include slides/slurm-intro.qmd >}}
+{{< include slides/sinfo.qmd >}}
+{{< include slides/sbatch.qmd >}}
+{{< include slides/submit-sbatch.qmd >}}
+{{< include slides/scontrol.qmd >}}
+{{< include slides/srun-interactive.qmd >}}
+{{< include slides/slurm-job-arrays.qmd >}}
+{{< include slides/slurm-mpi.qmd >}}
+{{< include slides/slurm-heterogeneous.qmd >}}
 
-Slurm (Simple Linux Utility for Resource Management) is an open-source, fault-tolerant, and highly scalable cluster management and job scheduling system.
-
-TODO: brief history, NVIDIA's involvement, etc.
-
-@Yoo2003 @Jette2023
-
-
-## Cluster status and available resources
-
-```bash
-[stud99@cascade-login ~]$ sinfo
-PARTITION  AVAIL  TIMELIMIT  NODES  STATE NODELIST
-cascade.p*    up 1-00:00:00      1  maint cascade-003
-cascade.p*    up 1-00:00:00      3 drain* cascade-[012,028,030]
-cascade.p*    up 1-00:00:00      7    mix cascade-[008,027,042,044,054-055,062]
-cascade.p*    up 1-00:00:00    111  alloc cascade-[001-002,004-007,009-011,018-026,029,031-039,041,045,049-051,053,057,065-089,092,097-144,147-148]
-cascade.p*    up 1-00:00:00     26   idle cascade-[013-017,040,043,046-048,052,056,058-061,063-064,090-091,093-096,145-146]
-debug.p       up    1:00:00      2   idle cascade-[149-150]
-karl.p        up 7-00:00:00      1    mix karl
-```
-
-The `STATE` column indicates whether nodes are idle, allocated, in maintenance, or in a mixed state (partially allocated)
-
-
-## Defining a Job
-
-```bash {filename="job.sh"}
-#!/bin/bash
-#SBATCH --job-name=test              # Job name
-#SBATCH --partition=cascade.p        # Partition to run on
-#SBATCH --nodes=1                    # Number of nodes
-#SBATCH --ntasks=1                   # Number of tasks per node
-#SBATCH --cpus-per-task=4            # Number of CPU cores per task
-#SBATCH --mem=8G                     # Memory per node
-#SBATCH --time=00:30:00              # Walltime (hh:mm:ss)
-#SBATCH --output=test-%j.out         # Standard output (%j = job ID)
-
-# run your command
-echo "Hello from node $(hostname)"
-```
-
-The batch script uses `#SBATCH` directives to specify job parameters.
-
-
-## Submit a Job
-
-The batch script can be submitted to the Slurm scheduler using the `sbatch` command:
-```bash
-sbatch job.sh
-```
-which will generate a confirmation message
-
-```bash
-Submitted batch job 18491592
-```
-indicating that the job was submitted with the `job ID` (here 18491592), which can be used to monitor the progress of the job.
-
-
-## Monitor Job Status
-
-`scontrol` can be used to obtain more detailed information about a job:
-
-```bash
-scontrol show job <job-id>
-```
-
-Example output:
-```bash
-JobId=18491592 JobName=hello_world
-   UserId=stud99(20199) GroupId=aliens(20000) MCS_label=N/A
-   Priority=3865470565 Nice=0 Account=(null) QOS=normal
-   JobState=RUNNING Reason=None Dependency=(null)
-   Requeue=0 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
-   RunTime=00:00:11 TimeLimit=00:05:00 TimeMin=N/A
-   SubmitTime=2026-02-20T14:51:17 EligibleTime=2026-02-20T14:51:17
-   AccrueTime=2026-02-20T14:51:17
-   StartTime=2026-02-20T14:51:18 EndTime=2026-02-20T14:56:18 Deadline=N/A
-   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-02-20T14:51:18 Scheduler=Main
-   Partition=cascade.p AllocNode:Sid=cascade-login:1286819
-   ReqNodeList=(null) ExcNodeList=(null)
-   NodeList=cascade-029
-   BatchHost=cascade-029
-   NumNodes=1 NumCPUs=2 NumTasks=1 CPUs/Task=1 ReqB:S:C:T=0:0:*:*
-   ReqTRES=cpu=1,mem=100M,node=1,billing=1
-   AllocTRES=cpu=2,node=1,billing=2
-   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
-   MinCPUsNode=1 MinMemoryNode=100M MinTmpDiskNode=0
-   Features=(null) DelayBoot=00:00:00
-   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
-   Command=/home/stud99/EDUCADO_Slurm_Workshop/hands-on/exercise_1/hello.sh
-   WorkDir=/home/stud99/EDUCADO_Slurm_Workshop/hands-on/exercise_1
-   StdErr=/home/stud99/EDUCADO_Slurm_Workshop/hands-on/exercise_1/hello_18491592.out
-   StdIn=/dev/null
-   StdOut=/home/stud99/EDUCADO_Slurm_Workshop/hands-on/exercise_1/hello_18491592.out
-   Power=
-```
-
-
-## Interactive Mode
-
-Sometimes you want to test things interactively. You can use `srun` for this:
-
-```bash
-srun --partition=cascade.q --time=01:00:00 --pty bash
-```
-
-
-## Job Arrays
-
-If you have a large number of similar jobs (e.g., parameter sweeps), you can use job arrays to submit them efficiently.
-
-```bash
-#!/bin/bash
-```
-
-
-
-
-## Basic Workflow
-
-1.  **Prepare**: Write your code and a submission script.
-2.  **Submit**: Use `sbatch script.sh` to send your job to the queue.
-3.  **Monitor**: Use `squeue -u <username>` to check status.
-4.  **Inspect**: Check output files (usually `slurm-<jobid>.out`).
-
-
-## MPI with Slurm
-
-```bash
-#!/bin/bash
-#SBATCH --nodes=2             # Request 2 nodes
-#SBATCH --ntasks-per-node=4   # Run 4 tasks per node (total 8 tasks)
-#SBATCH --time=1:00:00        # Set a time limit to 1 hour
-
-module load openmpi           # Load your MPI module
-srun ./my_mpi_program         # srun handles the launching
-```
-
-::: {.callout-note title="Use `srun` (instead of `mpirun` or `mpiexec`) to launch parallel tasks across nodes."}
-It directly communicates with Slurm to launch processes, propagates signals correctly
-(like cancelling a job), and ensures process binding respects your requests.
-:::
-
-
-## Heterogeneous Jobs
-
-Sometimes a single job needs different resources for different parts (e.g., a master process on a CPU node and worker processes on GPU nodes).
-
-**Key Features:**
-
-*   Combine multiple job specifications into one valid job.
-*   Each component (pack group) has its own resources (nodes, memory, partition).
-*   Submitted as a single entity with one JOBID.
-
-**Syntax Example:**
-
-```bash
-#SBATCH --job-name=hetero_job
-#SBATCH --nodes=1 --cpus-per-task=4 --mem=16G  # Component 0 (Pre-processing)
-#SBATCH packjob                                # Separator
-#SBATCH --nodes=2 --gpus-per-node=1            # Component 1 (GPU training)
-```
-
-
-## HITS Cascade Cluster [(used for hands-on exercises)]{style="font-size: 0.5em;"}
-
-::: {.columns}
-::: {.column width="50%"}
-![](images/hits-cluster.jpg)
-:::
-::: {.column width="50%"}
-The cluster provides over **3,000 CPU cores**, which can be used for general-purpose parallel workloads and CPU-bound applications.
-
-**300 NVIDIA RTX 2080 Super GPUs** makes it well-suited for molecular dynamics simulations, machine learning workflows, and large-scale linear algebra computations.
-:::
-:::
 
 
 ## References

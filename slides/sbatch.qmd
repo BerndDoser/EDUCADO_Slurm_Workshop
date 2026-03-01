@@ -1,0 +1,18 @@
+## Defining a Job
+
+```bash {filename="job.sh"}
+#!/bin/bash
+#SBATCH --job-name=test              # Job name
+#SBATCH --partition=cascade.p        # Partition to run on
+#SBATCH --nodes=1                    # Number of nodes
+#SBATCH --ntasks=1                   # Number of tasks per node
+#SBATCH --cpus-per-task=4            # Number of CPU cores per task
+#SBATCH --mem=8G                     # Memory per node
+#SBATCH --time=00:30:00              # Walltime (hh:mm:ss)
+#SBATCH --output=test-%j.out         # Standard output (%j = job ID)
+
+# run your command
+echo "Hello from node $(hostname)"
+```
+
+The batch script uses `#SBATCH` directives to specify job parameters. When you submit this script with `sbatch job.sh`, Slurm will read these directives to allocate the appropriate resources and execute the job.

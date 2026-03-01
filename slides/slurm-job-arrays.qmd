@@ -1,0 +1,12 @@
+## Job Arrays
+
+If you have a large number of similar jobs (e.g., parameter sweeps), you can use job arrays to submit them efficiently.
+
+```bash
+#!/bin/bash
+#SBATCH --array=0-9
+#SBATCH --time=01:00:00
+#SBATCH --job-name=array_job
+
+echo "Running task $SLURM_ARRAY_TASK_ID"
+```
