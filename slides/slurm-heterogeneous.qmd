@@ -8,11 +8,16 @@ Sometimes a single job needs different resources for different parts (e.g., a ma
 *   Each component (pack group) has its own resources (nodes, memory, partition).
 *   Submitted as a single entity with one JOBID.
 
-**Syntax Example:**
 
 ```bash
-#SBATCH --job-name=hetero_job
-#SBATCH --nodes=1 --cpus-per-task=4 --mem=16G  # Component 0 (Pre-processing)
-#SBATCH packjob                                # Separator
-#SBATCH --nodes=2 --gpus-per-node=1            # Component 1 (GPU training)
+#!/bin/bash
+#SBATCH --partition=genoa.p --nodes=2 --ntasks-per-node=32
+#SBATCH hetjob
+#SBATCH --partition=genoa-deep.p --nodes=1 --gpus=4
+
+srun --het-group=0 ./preprocess
+srun --het-group=1 ./train
 ```
+
+## hetjob vs packjob
+

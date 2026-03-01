@@ -19,5 +19,5 @@ format:
     bibliography: references.bib
     width: 1300
     menu: false
-    show-slide-number: print
+    # show-slide-number: print
     css: styles.css

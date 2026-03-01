@@ -11,6 +11,7 @@
   - Heterogeneous jobs with different resource requirements
 <!-- ::: -->
 
+---
 
 {{< include slides/why-hpc.qmd >}}
 {{< include slides/hits-cascade-cluster.qmd >}}
@@ -26,6 +27,14 @@
 {{< include slides/slurm-mpi.qmd >}}
 {{< include slides/slurm-heterogeneous.qmd >}}
 
+---
 
+## Summary
+
+- **SLURM** is a widely used job scheduler that manages resource allocation and job scheduling on HPC clusters.
+- Understanding the architecture of **SLURM** and how to submit and monitor jobs is essential for effectively utilizing HPC resources.
+- **StreamFlow** provides a framework for managing heterogeneous jobs with varying resource requirements.
+
+---
 
 ## References
