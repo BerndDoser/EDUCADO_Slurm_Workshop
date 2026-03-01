@@ -1,7 +1,11 @@
 ## What is SLURM?
 
-- SLURM (Simple Linux Utility for Resource Management) is an open-source, fault-tolerant, and highly scalable cluster management and job scheduling system.
+SLURM (**S**imple **L**inux **U**tility for **R**esource **M**anagement) is an open-source workload manager designed for Linux clusters of all sizes.
 
-- It is widely used in high-performance computing (HPC) environments to manage and schedule jobs on large clusters of computers.
+- Keeps track of all nodes, CPUs, GPUs, and memory
+- Enforces fair-share policies and quotas
+- Accepts job submissions from users (`sbatch`, `srun`, `salloc`)
+- Queues jobs and dispatches them when resources are free
+- Supports priorities, reservations, and backfill scheduling
 
-- NVIDIA officially acquired SchedMD (the company behind SLURM) in late 2025.
+SLURM is now part of NVIDIA's HPC software stack (December 2025).

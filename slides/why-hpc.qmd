@@ -1,0 +1,9 @@
+## Why HPC?
+
+- Hundreds to thousands of CPU/GPU cores
+- Terabytes of shared memory
+- Fast interconnects (InfiniBand)
+- Shared, managed storage
+- High-performance software stack (MPI, CUDA, optimized libraries)
+- Job scheduling and resource management
+- Access to specialized hardware (FPGAs, TPUs, etc.)

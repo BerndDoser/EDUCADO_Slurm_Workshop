@@ -1,0 +1,17 @@
+## Slurm Architecture
+
+```{mermaid}
+%%| fig-align: center
+flowchart LR
+    U(["👤 User"]) -- sbatch / srun --> LC["Login Node\nslurmctld"]
+    LC -- dispatches --> N1["Compute Node\nslurmd"]
+    LC -- dispatches --> N2["Compute Node\nslurmd"]
+    LC -- dispatches --> N3["Compute Node\nslurmd"]
+    DB[("SlurmDB\nAccounting")] <--> LC
+```
+::: {style="font-size: 0.5em;"}
+- **Login node** — where users connect via SSH and submit jobs; never run heavy work here
+- **Compute nodes** — where jobs actually execute; managed by the `slurmd` daemon
+- **SlurmDB** — optional accounting database for job history and fairshare
+- **slurmctld** — central controller that manages job scheduling and resource allocation
+:::

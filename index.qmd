@@ -12,8 +12,11 @@
 <!-- ::: -->
 
 
+{{< include slides/why-hpc.qmd >}}
 {{< include slides/hits-cascade-cluster.qmd >}}
 {{< include slides/slurm-intro.qmd >}}
+{{< include slides/slurm-workflow.qmd >}}
+{{< include slides/slurm-architecture.qmd >}}
 {{< include slides/sinfo.qmd >}}
 {{< include slides/sbatch.qmd >}}
 {{< include slides/submit-sbatch.qmd >}}
