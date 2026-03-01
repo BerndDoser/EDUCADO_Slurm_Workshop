@@ -127,7 +127,7 @@ If you have a large number of similar jobs (e.g., parameter sweeps), you can use
 
 ```bash
 #!/bin/bash
-
+```
 
 
 
@@ -176,9 +176,20 @@ Sometimes a single job needs different resources for different parts (e.g., a ma
 #SBATCH packjob                                # Separator
 #SBATCH --nodes=2 --gpus-per-node=1            # Component 1 (GPU training)
 ```
-## HITS cluster
 
-![HITS cluster](images/hits-cluster.jpg)
+
+## HITS Cascade Cluster [(used for hands-on exercises)]{style="font-size: 0.5em;"}
+
+::: {.columns}
+::: {.column width="50%"}
+![](images/hits-cluster.jpg)
+:::
+::: {.column width="50%"}
+The cluster provides over **3,000 CPU cores**, which can be used for general-purpose parallel workloads and CPU-bound applications.
+
+**300 NVIDIA RTX 2080 Super GPUs** makes it well-suited for molecular dynamics simulations, machine learning workflows, and large-scale linear algebra computations.
+:::
+:::
 
 
 ## References
