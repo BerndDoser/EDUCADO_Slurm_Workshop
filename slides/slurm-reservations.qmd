@@ -1,0 +1,27 @@
+## Slurm Reservation
+
+A **reservation** pre-allocates cluster resources (nodes, CPUs, time window) for exclusive use by a specific set of users or accounts.
+
+List all active and upcoming reservations:
+
+```bash
+scontrol show reservation
+```
+
+Our reservation `aliens_99` is scheduled for March 5-6, 2026, reserving 10 nodes (200 cores) for the `aliens` group.
+
+::: {style="font-size: 0.8em;"}
+```bash
+ReservationName=aliens_99 StartTime=2026-03-05T06:00:00 EndTime=2026-03-06T06:00:00 Duration=1-00:00:00
+   Nodes=cascade-[001-010] NodeCnt=10 CoreCnt=200 Features=(null) PartitionName=(null) Flags=SPEC_NODES
+   TRES=cpu=400
+   Users=(null) Groups=aliens Accounts=(null) Licenses=(null) State=INACTIVE BurstBuffer=(null) Watts=n/a
+   MaxStartDelay=(null)
+```
+:::
+
+Users submit jobs into a reservation with `--reservation`:
+
+```bash
+sbatch --reservation=aliens_99 job.sh
+```

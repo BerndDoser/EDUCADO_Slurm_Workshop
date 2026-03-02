@@ -26,6 +26,7 @@
 {{< include slides/slurm-job-arrays.qmd >}}
 {{< include slides/slurm-mpi.qmd >}}
 {{< include slides/slurm-heterogeneous.qmd >}}
+{{< include slides/slurm-reservations.qmd >}}
 
 {{< include slides/hands-on.qmd >}}
 {{< include slides/exercise_1.md >}}
@@ -42,7 +43,6 @@
 - Slurm with Singularity/Apptainer
 - Slurm with Containers (beyond Singularity)
 - Slurm with GPUs (beyond hetjob)
-- reservations and advanced scheduling features
 
 ---
 
