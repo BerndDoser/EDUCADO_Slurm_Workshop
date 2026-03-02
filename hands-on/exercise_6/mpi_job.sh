@@ -11,6 +11,8 @@ echo "Nodes:         $SLURM_JOB_NODELIST"
 echo "Total tasks:   $SLURM_NTASKS"
 echo ""
 
-module load openmpi        # adjust to your cluster's module name
+. cascade-gompi-2025b.sh
 
-srun ./mpi_hello
+#srun ./mpi_hello
+
+mpirun --bind-to none ./mpi_hello
