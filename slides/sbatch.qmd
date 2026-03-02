@@ -15,4 +15,5 @@
 echo "Hello from node $(hostname)"
 ```
 
-The batch script uses `#SBATCH` directives to specify job parameters. When you submit this script with `sbatch job.sh`, Slurm will read these directives to allocate the appropriate resources and execute the job.
+- `#SBATCH` directives to specify job parameters
+- Slurm will allocate the appropriate resources and execute the job
