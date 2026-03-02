@@ -19,5 +19,5 @@ srun --het-group=0 ./preprocess
 srun --het-group=1 ./train
 ```
 
-## hetjob vs packjob
+<!-- ## hetjob vs packjob -->
 

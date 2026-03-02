@@ -2,13 +2,11 @@
 
 A **reservation** pre-allocates cluster resources (nodes, CPUs, time window) for exclusive use by a specific set of users or accounts.
 
-List all active and upcoming reservations:
-
 ```bash
-scontrol show reservation
+scontrol show reservation  # List all reservations
 ```
 
-Our reservation `aliens_99` is scheduled for March 5-6, 2026, reserving 10 nodes (200 cores) for the `aliens` group.
+Our reservation is scheduled for March 5-6, 2026, reserving 10 nodes (200 cores):
 
 ::: {style="font-size: 0.8em;"}
 ```bash
@@ -20,7 +18,7 @@ ReservationName=aliens_99 StartTime=2026-03-05T06:00:00 EndTime=2026-03-06T06:00
 ```
 :::
 
-Users submit jobs into a reservation with `--reservation`:
+Users submit jobs into a reservation with:
 
 ```bash
 sbatch --reservation=aliens_99 job.sh
