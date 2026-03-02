@@ -41,6 +41,8 @@
 - **Containers / Apptainer** can be used to create reproducible environments for HPC applications.
 - **StreamFlow** provides a framework for managing heterogeneous jobs with varying resource requirements.
 
+## References
+
 ---
 
 {{< include slides/hands-on.qmd >}}
@@ -50,6 +52,3 @@
 {{< include slides/exercise_4.md >}}
 {{< include slides/exercise_5.md >}}
 {{< include slides/exercise_6.md >}}
----
-
-## References
