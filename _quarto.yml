@@ -21,4 +21,3 @@ format:
     menu: false
     # show-slide-number: print
     css: styles.css
-    font-size: 30px
