@@ -1,0 +1,22 @@
+## GPU Jobs with Slurm
+
+GPUs are managed as **Generic REsources (GRES)** in Slurm.
+
+```bash
+#SBATCH --gres=gpu:a100:2       # 2× NVIDIA A100 per node
+#SBATCH --gres=gpu:v100:1       # 1× NVIDIA V100 per node
+#SBATCH --gres=gpu:rtx3090:4    # 4× RTX 3090 per node
+```
+
+Find available GPU types with
+
+```bash
+sinfo -o "%P %G" | column -t
+```
+
+Check actual GPU allocation inside your job
+
+```bash
+echo $CUDA_VISIBLE_DEVICES    # Slurm sets this automatically
+nvidia-smi                    # shows only your allocated GPUs
+```

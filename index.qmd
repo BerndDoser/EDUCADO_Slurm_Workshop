@@ -25,24 +25,11 @@
 {{< include slides/srun-interactive.qmd >}}
 {{< include slides/slurm-job-arrays.qmd >}}
 {{< include slides/slurm-mpi.qmd >}}
+{{< include slides/slurm-gpu.qmd >}}
 {{< include slides/slurm-heterogeneous.qmd >}}
 {{< include slides/slurm-rest-api.qmd >}}
 {{< include slides/slurm-reservations.qmd >}}
 {{< include slides/slurm-containers.qmd >}}
-
-{{< include slides/hands-on.qmd >}}
-{{< include slides/exercise_1.md >}}
-{{< include slides/exercise_2.md >}}
-{{< include slides/exercise_3.md >}}
-{{< include slides/exercise_4.md >}}
-{{< include slides/exercise_5.md >}}
-
----
-
-## Missing Topics
-
-- Slurm with Singularity/Apptainer
-- Slurm with GPUs (beyond hetjob)
 
 ---
 
@@ -50,8 +37,18 @@
 
 - **SLURM** is a widely used job scheduler that manages resource allocation and job scheduling on HPC clusters.
 - Understanding the architecture of **SLURM** and how to submit and monitor jobs is essential for effectively utilizing HPC resources.
+- **Containers / Apptainer** can be used to create reproducible environments for HPC applications.
 - **StreamFlow** provides a framework for managing heterogeneous jobs with varying resource requirements.
 
+---
+
+{{< include slides/hands-on.qmd >}}
+{{< include slides/exercise_1.md >}}
+{{< include slides/exercise_2.md >}}
+{{< include slides/exercise_3.md >}}
+{{< include slides/exercise_4.md >}}
+{{< include slides/exercise_5.md >}}
+{{< include slides/exercise_6.md >}}
 ---
 
 ## References
