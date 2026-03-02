@@ -27,6 +27,13 @@
 {{< include slides/slurm-mpi.qmd >}}
 {{< include slides/slurm-heterogeneous.qmd >}}
 
+{{< include slides/hands-on.qmd >}}
+{{< include slides/exercise_1.md >}}
+{{< include slides/exercise_2.md >}}
+{{< include slides/exercise_3.md >}}
+{{< include slides/exercise_4.md >}}
+{{< include slides/exercise_5.md >}}
+
 ---
 
 ## Missing Topics
