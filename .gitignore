@@ -3,3 +3,4 @@
 *.html
 
 **/*.quarto_ipynb
+hands-on/exercise_6/mpi_hello
