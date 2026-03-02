@@ -23,6 +23,7 @@
 {{< include slides/submit-sbatch.qmd >}}
 {{< include slides/scontrol.qmd >}}
 {{< include slides/srun-interactive.qmd >}}
+{{< include slides/slurm-fairshare-qos.qmd >}}
 {{< include slides/slurm-job-arrays.qmd >}}
 {{< include slides/slurm-mpi.qmd >}}
 {{< include slides/slurm-gpu.qmd >}}

@@ -1,0 +1,32 @@
+## Fairshare & QOS {.smaller}
+
+Slurm calculates a **priority score** per job — weighted by **Fairshare**, **QOS**, age, and partition.
+
+**Fairshare** — users who consumed *less* than their allocated share get a priority boost; heavy users are penalised.
+
+```bash
+sshare -u $USER      # FairShare near 1.0 = under-used (↑ priority); near 0.0 = over-used (↓ priority)
+sprio -j <job_id>    # show full priority breakdown
+```
+
+**Quality of Service (QOS)** — named policies set by admins that cap or boost jobs:
+
+| Parameter | Effect |
+|---|---|
+| `MaxWall` | Maximum walltime allowed |
+| `MaxTRESPerUser` | Cap on CPUs / GPUs / memory |
+| `Priority` | Additive priority boost |
+| `Preempt` | Can this QOS preempt others? |
+
+```bash
+sacctmgr show assoc user=$USER format=Account,QOS   # which QOS you can use
+```
+
+```bash
+#SBATCH --qos=high_priority
+```
+
+::: {.callout-note icon=false}
+## Why is my job still waiting?
+High recent usage lowers your Fairshare score. Use `sprio -l` to see where your job ranks among all pending jobs.
+:::
