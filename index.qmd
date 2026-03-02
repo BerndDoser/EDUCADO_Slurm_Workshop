@@ -26,7 +26,9 @@
 {{< include slides/slurm-job-arrays.qmd >}}
 {{< include slides/slurm-mpi.qmd >}}
 {{< include slides/slurm-heterogeneous.qmd >}}
+{{< include slides/slurm-rest-api.qmd >}}
 {{< include slides/slurm-reservations.qmd >}}
+{{< include slides/slurm-containers.qmd >}}
 
 {{< include slides/hands-on.qmd >}}
 {{< include slides/exercise_1.md >}}
@@ -39,9 +41,7 @@
 
 ## Missing Topics
 
-- Slurm Rest API
 - Slurm with Singularity/Apptainer
-- Slurm with Containers (beyond Singularity)
 - Slurm with GPUs (beyond hetjob)
 
 ---
