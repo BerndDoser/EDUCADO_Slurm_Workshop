@@ -1,4 +1,4 @@
-## Heterogeneous Jobs
+## Heterogeneous Jobs {.smaller}
 
 Sometimes a single job needs different resources for different parts (e.g., a master process on a CPU node and worker processes on GPU nodes).
 

@@ -2,7 +2,7 @@
 
 ```{mermaid}
 %%| fig-align: center
-%%{ init: { "themeVariables": { "fontSize": "12px" }, "flowchart": { "nodeSpacing": 30, "rankSpacing": 60 } } }%%
+%%{ init: { "themeVariables": { "fontSize": "16px" }, "flowchart": { "nodeSpacing": 30, "rankSpacing": 60 } } }%%
 flowchart LR
     U(["👤 User"]) -- sbatch / srun --> LC["Login Node<br/>slurmctld"]
     LC -- dispatches --> N1["Compute Node<br/>slurmd"]
@@ -10,7 +10,7 @@ flowchart LR
     LC -- dispatches --> N3["Compute Node<br/>slurmd"]
     DB[("SlurmDB<br/>Accounting")] <--> LC
 ```
-::: {style="font-size: 0.5em;"}
+::: {style="font-size: 0.8em;"}
 - **Login node** — where users connect via SSH and submit jobs; never run heavy work here
 - **Compute nodes** — where jobs actually execute; managed by the `slurmd` daemon
 - **SlurmDB** — optional accounting database for job history and fairshare
