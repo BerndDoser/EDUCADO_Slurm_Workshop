@@ -1,0 +1,25 @@
+## Quality of Service (QoS) {.smaller}
+
+Most clusters use a standard set of QoS levels:
+
+::: {style="font-size: 0.8em;"}
+- **debug**: Very high priority, but very short walltime (e.g., 30 mins) and small node limits. Great for testing code before a big run.
+- **normal**: The default. Balanced priority and standard limits.
+- **long**: Lower priority, but allows jobs to run for 7+ days.
+- **scavenger**: Zero priority. Jobs only run if the cluster is empty, and they can be killed (preempted) the moment a "paying" job arrives.
+:::
+
+<!-- Available QoS options on your cluster:
+```bash
+sacctmgr show qos format=Name,Priority,MaxWall,Flags
+``` -->
+
+To submit a job with a specific QoS:
+```bash
+sbatch --qos=high_priority my_script.sh
+```
+
+::: {.callout-note icon=false}
+## Why is my job still waiting?
+High recent usage lowers your Fairshare score. Use `sprio -l -u $USER` to see where your job ranks among all pending jobs.
+:::

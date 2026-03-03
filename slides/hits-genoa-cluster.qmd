@@ -1,0 +1,10 @@
+## HITS Genoa Cluster
+
+::: {.columns}
+::: {.column width="35%"}
+![](images/hits-genoa-cluster.jpg)
+:::
+::: {.column width="65%"}
+The **Genoa cluster** represents the next generation of high-performance computing. Equipped with state-of-the-art **AMD EPYC Genoa, Bergamo, and Rome processors** as well as the latest **NVIDIA H200 and A100 GPUs**, it provides a versatile platform for both CPU-intensive and GPU-accelerated research workloads.
+:::
+:::

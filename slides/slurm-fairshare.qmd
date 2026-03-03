@@ -1,0 +1,24 @@
+## Fairshare {.smaller}
+
+Fairshare ensures equitable cluster access by **prioritizing users who have used fewer resources** recently.
+
+$$
+\text{Priority} = w_{fs} \cdot F + w_{age} \cdot A + w_{qos} \cdot Q + \ldots
+$$
+
+- **Fairshare score** $F \in [0, 1]$: closer to 1 means higher priority (less recent usage)
+- Score decays over time — past usage matters less as time passes
+
+```bash
+# View your fairshare score
+sshare -u $USER
+
+# See job priority breakdown for pending jobs
+sprio -l -u $USER
+```
+
+::: {.callout-tip}
+Submit jobs when your fairshare score is high to get shorter wait times.
+:::
+
+

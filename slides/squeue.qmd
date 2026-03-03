@@ -1,0 +1,19 @@
+## `squeue`: Monitor the Job Queue
+
+```bash
+[stud99@cascade-login ~]$ squeue --me
+JOBID        PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+18491592   cascade.p  hello_wo  stud99  R       0:11      1 cascade-029
+18491601   cascade.p  array_jo  stud99 PD       0:00      1 (Priority)
+```
+
+::: {style="font-size: 0.6em;"}
+| Column | Description |
+|--------|-------------|
+| `JOBID` | Unique job identifier |
+| `ST` | State: `R` = Running, `PD` = Pending, `CG` = Completing |
+| `TIME` | Elapsed run time |
+| `NODELIST(REASON)` | Node(s) assigned, or reason if pending |
+:::
+
+Useful options: `--me` (own jobs), `-u <user>`, `-p <partition>`, `--start` (estimated start time)

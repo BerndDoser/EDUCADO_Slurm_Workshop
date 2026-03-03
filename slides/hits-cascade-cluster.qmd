@@ -2,10 +2,10 @@
 
 ::: {.columns}
 ::: {.column width="45%"}
-![](images/hits-cluster.jpg)
+![](images/hits-cascade-cluster.jpg)
 :::
 ::: {.column width="55%"}
-The cluster provides over **3,000 CPU cores**, which can be used for general-purpose parallel workloads and CPU-bound applications.
+The **Cascade cluster** provides over **3,000 CPU cores**, which can be used for general-purpose parallel workloads and CPU-bound applications.
 
 **300 NVIDIA RTX 2080 Super GPUs** makes it well-suited for molecular dynamics simulations, machine learning workflows, and large-scale linear algebra computations.
 :::
