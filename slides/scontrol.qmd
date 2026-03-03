@@ -1,4 +1,4 @@
-## Monitor Job Status
+## `scontrol`: Monitor Job Status
 
 `scontrol` can be used to obtain more detailed information about a job:
 

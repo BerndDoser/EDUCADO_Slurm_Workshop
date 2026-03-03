@@ -1,4 +1,4 @@
-## Submit a Job
+## `sbatch`: Submit a Job
 
 The batch script can be submitted to the Slurm scheduler using the `sbatch` command:
 ```bash

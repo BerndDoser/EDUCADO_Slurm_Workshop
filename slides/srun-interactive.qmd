@@ -1,4 +1,4 @@
-## Interactive Mode
+## `srun`: Interactive Mode
 
 Sometimes you want to test things interactively. You can use `srun` for this:
 

@@ -1,4 +1,4 @@
-## Defining a Job
+## `sbatch`: Defining a Job
 
 ```bash {filename="job.sh"}
 #!/bin/bash

@@ -1,4 +1,4 @@
-## Cluster status and available resources
+## `sinfo`: Cluster status
 
 ```bash
 [stud99@cascade-login ~]$ sinfo

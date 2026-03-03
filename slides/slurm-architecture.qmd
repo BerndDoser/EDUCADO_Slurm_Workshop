@@ -2,7 +2,7 @@
 
 ```{mermaid}
 %%| fig-align: center
-%%{ init: { "themeVariables": { "fontSize": "16px" }, "flowchart": { "nodeSpacing": 30, "rankSpacing": 60 } } }%%
+%%{ init: { "themeVariables": { "fontSize": "12px" }, "flowchart": { "nodeSpacing": 30, "rankSpacing": 60 } } }%%
 flowchart LR
     U(["👤 User"]) -- sbatch / srun --> LC["Login Node<br/>slurmctld"]
     LC -- dispatches --> N1["Compute Node<br/>slurmd"]

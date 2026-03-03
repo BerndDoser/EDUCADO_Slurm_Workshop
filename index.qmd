@@ -20,7 +20,7 @@
 {{< include slides/slurm-architecture.qmd >}}
 {{< include slides/sinfo.qmd >}}
 {{< include slides/sbatch.qmd >}}
-{{< include slides/submit-sbatch.qmd >}}
+{{< include slides/sbatch-submit-job.qmd >}}
 {{< include slides/scontrol.qmd >}}
 {{< include slides/srun-interactive.qmd >}}
 {{< include slides/slurm-fairshare-qos.qmd >}}
@@ -43,6 +43,9 @@
 - **StreamFlow** provides a framework for managing heterogeneous jobs with varying resource requirements.
 
 ## References
+
+:::{#refs}
+:::
 
 ---
 
