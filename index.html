@@ -917,11 +917,20 @@ Yoo, Andy B., Morris A. Jette, and Mark Grondona. 2003. <span>“SLURM: Simple L
 </div>
 </div>
 </section>
+<section id="exercise-1-answers" class="slide level2 smaller">
+<h2>Exercise 1: Answers</h2>
+<ul>
+<li>How many partitions does the cluster have? What are their names? cascade.p (default), debug.p, karl.p</li>
+<li>How many nodes are in each partition? cascade.p: 148 nodes, debug.p: 2 nodes, karl.p: 1 node</li>
+<li>Are any jobs currently running? How can you tell? The <code>squeue</code> command shows no active jobs in the queue.</li>
+<li>What is the maximum walltime allowed on the default partition? cascade.p has a maximum walltime of 24 hours. Default time limit is 2 hours.</li>
+</ul>
+</section>
 <section id="exercise-2-write-your-first-batch-script" class="slide level2 smaller">
 <h2>Exercise 2: Write your first batch script</h2>
 <p>Submit and observe</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> hello.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Now <strong>quickly</strong> (within 30 seconds!) run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 hello.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Now <strong>quickly</strong> (within 30 seconds!) run several times:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">squeue</span> <span class="at">-u</span> <span class="va">$USER</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Questions:</strong></p>
 <ul>
@@ -938,19 +947,19 @@ Yoo, Andy B., Morris A. Jette, and Mark Grondona. 2003. <span>“SLURM: Simple L
 <section id="exercise-3-submit-a-buggy-script" class="slide level2">
 <h2>Exercise 3: Submit a buggy script</h2>
 <p>Try to submit it:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> buggy.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 buggy.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Questions:</strong></p>
 <ul>
 <li>Did the job submit successfully? What error did you get?</li>
-<li>Fix the <code>--partition</code> line (use a valid partition from Part A) and resubmit. What happens now?</li>
+<li>Fix it and resubmit. What happens now?</li>
 <li>After it runs, check both <code>.out</code> and <code>.err</code> files. What error do you see?</li>
-<li>How would you fix the Python error?</li>
+<li>What is the hidden integer?</li>
 </ul>
 </section>
 <section id="exercise-4-experiment-with-resources" class="slide level2">
 <h2>Exercise 4: Experiment with resources</h2>
 <p>Submit the script <code>resources.sh</code> and use <code>scontrol</code> to inspect:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> resources.sh</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 resources.sh</span>
 <span id="cb30-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">scontrol</span> show job <span class="op">&lt;</span>jobid<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Questions:</strong></p>
 <ul>
@@ -962,7 +971,7 @@ Yoo, Andy B., Morris A. Jette, and Mark Grondona. 2003. <span>“SLURM: Simple L
 <h2>Exercise 5: Job Arrays</h2>
 <p>You need to process 5 “datasets” (we’ll simulate them). Instead of submitting 5 separate jobs, you’ll use a <strong>job array</strong>.</p>
 <p><strong>Submit and monitor</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> array_job.sh</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 array_job.sh</span>
 <span id="cb31-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">squeue</span> <span class="at">-u</span> <span class="va">$USER</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Questions:</strong></p>
 <ul>
@@ -978,7 +987,7 @@ Yoo, Andy B., Morris A. Jette, and Mark Grondona. 2003. <span>“SLURM: Simple L
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> hands-on/exercise_6</span>
 <span id="cb32-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicc</span> <span class="at">-o</span> mpi_hello mpi_hello.c</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Submit the job</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> mpi_job.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 mpi_job.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Questions:</strong></p>
 <ul>
 <li>How many lines appear in the output file? Does each MPI rank print its message?</li>
