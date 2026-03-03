@@ -5,7 +5,7 @@ You need to process 5 "datasets" (we'll simulate them). Instead of submitting 5 
 **Submit and monitor**
 
 ```bash
-sbatch array_job.sh
+sbatch --reservation=aliens_99 array_job.sh
 squeue -u $USER
 ```
 

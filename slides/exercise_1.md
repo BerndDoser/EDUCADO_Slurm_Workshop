@@ -18,3 +18,15 @@ scontrol show partition
 ::: {.callout-note icon=false}
 ## Try `sinfo -N -l` for a node-level view and `scontrol show partition <name>` for details on a specific partition.
 :::
+
+## Exercise 1: Answers {.smaller}
+
+- How many partitions does the cluster have? What are their names?
+    cascade.p (default), debug.p, karl.p
+- How many nodes are in each partition?
+    cascade.p: 148 nodes, debug.p: 2 nodes, karl.p: 1 node
+- Are any jobs currently running? How can you tell?
+    The `squeue` command shows no active jobs in the queue.
+- What is the maximum walltime allowed on the default partition?
+    cascade.p has a maximum walltime of 24 hours. Default time limit is 2 hours.
+    

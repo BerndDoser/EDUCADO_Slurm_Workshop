@@ -3,10 +3,10 @@
 Submit and observe
 
 ```bash
-sbatch hello.sh
+sbatch --reservation=aliens_99 hello.sh
 ```
 
-Now **quickly** (within 30 seconds!) run:
+Now **quickly** (within 30 seconds!) run several times:
 
 ```bash
 squeue -u $USER

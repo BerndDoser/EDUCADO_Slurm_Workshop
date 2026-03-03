@@ -12,7 +12,7 @@ mpicc -o mpi_hello mpi_hello.c
 **Submit the job**
 
 ```bash
-sbatch mpi_job.sh
+sbatch --reservation=aliens_99 mpi_job.sh
 ```
 
 **Questions:**

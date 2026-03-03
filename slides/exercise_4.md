@@ -3,7 +3,7 @@
 Submit the script `resources.sh` and use `scontrol` to inspect:
 
 ```bash
-sbatch resources.sh
+sbatch --reservation=aliens_99 resources.sh
 scontrol show job <jobid>
 ```
 
