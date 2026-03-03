@@ -4,7 +4,7 @@
 - Login to the HITS Cascade cluster using the following command:
 
 ```bash
-ssh -i <path_to_your_private_key> <username>@cascade-login.h-its.org
+ssh -i <path_to_your_private_key> <username>@cascade-extern.h-its.org
 ```
 
 The username `studXX` and the private key were provided via email.
