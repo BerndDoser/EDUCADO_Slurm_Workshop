@@ -395,7 +395,7 @@ flowchart LR
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> job.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>which will generate a confirmation message</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Submitted</span> batch job 18491592</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>indicating that the job was submitted with the <code>job ID</code>, which can be used to monitor or cancel the job.</p>
+<p>indicating that the job was submitted with the <code>JOBID</code>, which can be used to monitor or cancel the job.</p>
 </section>
 <section id="squeue-monitor-the-job-queue" class="slide level2">
 <h2><code>squeue</code>: Monitor the Job Queue</h2>
@@ -437,6 +437,7 @@ flowchart LR
 <h2><code>scontrol</code>: Monitor Job Status</h2>
 <p><code>scontrol</code> can be used to obtain more detailed information about a job:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">scontrol</span> show job <span class="op">&lt;</span>job-id<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div style="font-size: 0.5em;">
 <p>Example output:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="va">JobId</span><span class="op">=</span>18491592 <span class="va">JobName</span><span class="op">=</span>hello_world</span>
 <span id="cb7-2"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">UserId</span><span class="op">=</span>stud99<span class="kw">(</span><span class="ex">20199</span><span class="kw">)</span> <span class="va">GroupId</span><span class="op">=</span>aliens<span class="kw">(</span><span class="ex">20000</span><span class="kw">)</span> <span class="va">MCS_label</span><span class="op">=</span>N/A</span>
@@ -465,12 +466,15 @@ flowchart LR
 <span id="cb7-25"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">StdIn</span><span class="op">=</span>/dev/null</span>
 <span id="cb7-26"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">StdOut</span><span class="op">=</span>/home/stud99/EDUCADO_Slurm_Workshop/hands-on/exercise_1/hello_18491592.out</span>
 <span id="cb7-27"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Power</span><span class="op">=</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
 <section id="srun-interactive-mode" class="slide level2">
 <h2><code>srun</code>: Interactive Mode</h2>
 <p>Allocates a node and drops you into an <strong>interactive shell</strong> — useful for debugging, testing, or exploring the environment.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">--partition</span><span class="op">=</span>cascade.p <span class="at">--time</span><span class="op">=</span>01:00:00 <span class="at">--pty</span> bash</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="fragment">
 <p>Common options:</p>
+<div style="font-size: 0.8em;">
 <table class="caption-top">
 <thead>
 <tr class="header">
@@ -501,6 +505,8 @@ flowchart LR
 </tr>
 </tbody>
 </table>
+</div>
+</div>
 </section>
 <section id="fairshare" class="slide level2 smaller">
 <h2>Fairshare</h2>
