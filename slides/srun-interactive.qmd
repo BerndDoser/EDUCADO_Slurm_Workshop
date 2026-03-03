@@ -1,7 +1,18 @@
 ## `srun`: Interactive Mode
 
-Sometimes you want to test things interactively. You can use `srun` for this:
+Allocates a node and drops you into an **interactive shell** — useful for debugging, testing, or exploring the environment.
 
 ```bash
-srun --partition=cascade.q --time=01:00:00 --pty bash
+srun --partition=cascade.p --time=01:00:00 --pty bash
 ```
+
+Common options:
+
+| Option | Description |
+|--------|-------------|
+| `--pty bash` | Open an interactive terminal |
+| `--cpus-per-task=4` | Request multiple CPUs |
+| `--mem=8G` | Request memory |
+| `--gres=gpu:1` | Request a GPU |
+| `--x11` | Enable X11 forwarding |
+
