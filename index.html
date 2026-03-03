@@ -508,7 +508,7 @@ flowchart LR
 </div>
 </div>
 </section>
-<section id="fairshare" class="slide level2 smaller">
+<section id="fairshare" class="slide level2" style="font-size: 0.8em;">
 <h2>Fairshare</h2>
 <p>Fairshare ensures equitable cluster access by <strong>prioritizing users who have used fewer resources</strong> recently.</p>
 <p><span class="math display">\[
@@ -529,15 +529,15 @@ flowchart LR
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Tip</strong></p>
+<p><strong>Submit jobs when your fairshare score is high to get shorter wait times.</strong></p>
 </div>
 <div class="callout-content">
-<p>Submit jobs when your fairshare score is high to get shorter wait times.</p>
+
 </div>
 </div>
 </div>
 </section>
-<section id="quality-of-service-qos" class="slide level2 smaller">
+<section id="quality-of-service-qos" class="slide level2" style="font-size: 0.8em;">
 <h2>Quality of Service (QoS)</h2>
 <p>Most clusters use a standard set of QoS levels:</p>
 <div style="font-size: 0.8em;">
@@ -691,7 +691,7 @@ sacctmgr show qos format=Name,Priority,MaxWall,Flags
 <h2>Slurm Reservation</h2>
 <p>A <strong>reservation</strong> pre-allocates cluster resources (nodes, CPUs, time window) for exclusive use by a specific set of users or accounts.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">scontrol</span> show reservation  <span class="co"># List all reservations</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Our reservation is scheduled for March 5-6, 2026, reserving 10 nodes (200 cores):</p>
+<p>Our reservation of 10 nodes (200 cores):</p>
 <div style="font-size: 0.8em;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="va">ReservationName</span><span class="op">=</span>aliens_99 <span class="va">StartTime</span><span class="op">=</span>2026-03-05T06:00:00 <span class="va">EndTime</span><span class="op">=</span>2026-03-06T06:00:00 <span class="va">Duration</span><span class="op">=</span>1-00:00:00</span>
 <span id="cb18-2"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Nodes</span><span class="op">=</span>cascade-<span class="pp">[</span><span class="ss">001</span><span class="pp">-</span><span class="ss">010</span><span class="pp">]</span> <span class="va">NodeCnt</span><span class="op">=</span>10 <span class="va">CoreCnt</span><span class="op">=</span>200 <span class="va">Features</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">PartitionName</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">Flags</span><span class="op">=</span>SPEC_NODES</span>
