@@ -1,7 +1,7 @@
 message: "Hi there!"
 
 train_script:
-  type: File
-  path: scripts/train.py
+  class: File
+  path: ./scripts/train.py
 
 max_iter: 10000

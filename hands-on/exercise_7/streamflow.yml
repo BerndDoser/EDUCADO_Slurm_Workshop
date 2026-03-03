@@ -4,7 +4,7 @@ workflows:
   workflow1:
     type: cwl
     config:
-      file: cwl/task_say_hello.cwl
+      file: cwl/workflow.cwl
       settings: cwl/settings.yml
     bindings:
       - step: /say_hello
@@ -29,5 +29,5 @@ deployments:
         cascade-gpu:
           partition: cascade.p
           nodes: "1"
-          gpus: "gpu:1"
+          gpus: "1"
           mem: 1gb
