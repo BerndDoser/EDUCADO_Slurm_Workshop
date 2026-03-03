@@ -1,0 +1,10 @@
+## Slurm Bonus Material
+
+- **Cancel a running job:** `scancel <jobid>`
+- **Email notifications:** Add `#SBATCH --mail-type=END` and `#SBATCH --mail-user=your@email.com` to a script.
+- **Job dependency:** Submit two jobs where the second only runs after the first succeeds:
+  ```bash
+  JOB1=$(sbatch --parsable hello.sh)
+  sbatch --dependency=afterok:$JOB1 hello.sh
+  ```
+  Use `squeue` to observe the second job waiting in state `PD` with reason `Dependency`.

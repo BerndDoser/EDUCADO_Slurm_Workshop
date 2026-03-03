@@ -1,0 +1,11 @@
+## Slurm Quick Reference
+
+| What you want to do             | Command                          |
+| :------------------------------ | :------------------------------- |
+| Submit a job                    | `sbatch script.sh`               |
+| Check your jobs                 | `squeue -u $USER`                |
+| Cancel a job                    | `scancel <jobid>`                |
+| See job details                 | `scontrol show job <jobid>`      |
+| View cluster info               | `sinfo`                          |
+| Get an interactive session      | `srun --pty bash`                |
+| Check past jobs (if available)  | `sacct -u $USER --starttime=today` |
