@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="index_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index_files/libs/quarto-html/tabby.min.js"></script>
+<script src="index_files/libs/quarto-html/popper.min.js"></script>
+<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting-b754b9fd3853d7e56faef54c29c5d52b.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.27">
+
+  <meta name="author" content="Bernd Doser">
+  <meta name="dcterms.date" content="2026-03-05">
+  <title>Simple Linux Utility for Resource Management (SLURM)</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #767676;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #767676;  padding-left: 4px; }
+    div.sourceCode
+      { color: #545454; background-color: #fefefe; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #545454; } /* Normal */
+    code span.al { color: #7928a1; } /* Alert */
+    code span.an { color: #696969; } /* Annotation */
+    code span.at { color: #a55a00; } /* Attribute */
+    code span.bn { color: #7928a1; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #d91e18; } /* ControlFlow */
+    code span.ch { color: #008000; } /* Char */
+    code span.cn { color: #d91e18; } /* Constant */
+    code span.co { color: #696969; } /* Comment */
+    code span.cv { color: #696969; font-style: italic; } /* CommentVar */
+    code span.do { color: #696969; font-style: italic; } /* Documentation */
+    code span.dt { color: #7928a1; } /* DataType */
+    code span.dv { color: #7928a1; } /* DecVal */
+    code span.er { color: #7928a1; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #a55a00; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #696969; } /* Information */
+    code span.kw { color: #d91e18; } /* Keyword */
+    code span.op { color: #00769e; } /* Operator */
+    code span.ot { color: #d91e18; } /* Other */
+    code span.pp { color: #7928a1; } /* Preprocessor */
+    code span.sc { color: #00769e; } /* SpecialChar */
+    code span.ss { color: #008000; } /* SpecialString */
+    code span.st { color: #008000; } /* String */
+    code span.va { color: #a55a00; } /* Variable */
+    code span.vs { color: #008000; } /* VerbatimString */
+    code span.wa { color: #696969; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+      margin-bottom: 0em;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-534cd8e3a96973385dffff3f4709048d.css">
+  <link rel="stylesheet" href="styles.css">
+  <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="index_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <script src="index_files/libs/quarto-diagram/mermaid.min.js"></script>
+  <script src="index_files/libs/quarto-diagram/mermaid-init.js"></script>
+  <link href="index_files/libs/quarto-diagram/mermaid.css" rel="stylesheet">
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" data-background-image="images/jupyter.jpg" data-background-opacity="0.8" data-background-size="cover" class="quarto-title-block center">
+  <h1 class="title">Simple Linux Utility for Resource Management (SLURM)</h1>
+  <p class="subtitle">EDUCADO-MWGaiaDN Training School on Astro-AI and Machine Learning</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Bernd Doser 
+</div>
+        <p class="quarto-title-affiliation">
+            Heidelberg Institute for Theoretical Studies (HITS)
+          </p>
+    </div>
+</div>
+
+  <p class="date">March 5, 2026</p>
+</section>
+<section id="agenda" class="slide level2">
+<h2>Agenda</h2>
+<!-- ::: {.incremental} -->
+<ul>
+<li>Slurm Basics
+<ul>
+<li>Understanding HPC Clusters, Partitions and Resources</li>
+<li>Submitting Jobs and Monitoring Progress</li>
+<li>Requesting resources (CPUs, memory, time)</li>
+</ul></li>
+<li>MPI with Slurm
+<ul>
+<li>Parallel jobs across multiple nodes</li>
+</ul></li>
+<li>Slurm with <a href="https://streamflow.di.unito.it/">StreamFlow</a>
+<ul>
+<li>Heterogeneous jobs with different resource requirements <!-- ::: --></li>
+</ul></li>
+</ul>
+</section>
+<section id="why-hpc" class="slide level2">
+<h2>Why HPC?</h2>
+<ul>
+<li>Hundreds to thousands of CPU/GPU cores</li>
+<li>Fast interconnects (InfiniBand <strong>~400 GB/s</strong>, NVLink <strong>~3 TB/s</strong>, etc.)</li>
+<li>Shared, managed storage (<strong>~9 PB</strong> @ HITS, 417 TB GPUDirect Storage)</li>
+<li>High-performance software stack (MPI, CUDA, optimized libraries)</li>
+<li>Job scheduling and resource management (<strong>SLURM</strong>, PBS, etc.)</li>
+<li>Access to specialized hardware (FPGAs, TPUs, etc.)</li>
+</ul>
+</section>
+<section id="hits-cascade-cluster-used-for-hands-on-session" class="slide level2">
+<h2>HITS Cascade Cluster <span style="font-size: 0.5em;">(used for hands-on session)</span></h2>
+<div class="columns">
+<div class="column" style="width:45%;">
+<p><img data-src="images/hits-cluster.jpg"></p>
+</div><div class="column" style="width:55%;">
+<p>The cluster provides over <strong>3,000 CPU cores</strong>, which can be used for general-purpose parallel workloads and CPU-bound applications.</p>
+<p><strong>300 NVIDIA RTX 2080 Super GPUs</strong> makes it well-suited for molecular dynamics simulations, machine learning workflows, and large-scale linear algebra computations.</p>
+</div></div>
+</section>
+<section id="what-is-slurm" class="slide level2">
+<h2>What is SLURM?</h2>
+<p>SLURM (<strong>S</strong>imple <strong>L</strong>inux <strong>U</strong>tility for <strong>R</strong>esource <strong>M</strong>anagement) is an open-source workload manager designed for Linux clusters of all sizes.</p>
+<div style="font-size: 0.6em;">
+<p><span class="citation" data-cites="Yoo2003">Yoo, Jette, and Grondona (<a href="#/references" role="doc-biblioref" onclick="">2003</a>)</span>, <span class="citation" data-cites="Jette2023">Jette and Wickberg (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span></p>
+</div>
+<ul>
+<li>Keeps track of all nodes, CPUs, GPUs, and memory</li>
+<li>Enforces fair-share policies and quotas</li>
+<li>Accepts job submissions from users (<code>sbatch</code>, <code>srun</code>, <code>salloc</code>)</li>
+<li>Queues jobs and dispatches them when resources are free</li>
+<li>Supports priorities, reservations, and backfill scheduling</li>
+</ul>
+<p>SLURM is now part of NVIDIA’s HPC software stack (December 2025).</p>
+</section>
+<section id="the-typical-slurm-workflow" class="slide level2">
+<h2>The Typical SLURM Workflow</h2>
+<!-- ::: {.incremental} -->
+<ol type="1">
+<li><strong>SSH</strong> into the login node</li>
+<li><strong>Prepare</strong> your script or application</li>
+<li><strong>Write a batch script</strong> with <code>#SBATCH</code> resource directives</li>
+<li><strong>Submit</strong> with <code>sbatch job.sh</code> → receive a job ID</li>
+<li><strong>Monitor</strong> with <code>squeue</code>, <code>sinfo</code>, <code>scontrol show job &lt;id&gt;</code></li>
+<li><strong>Retrieve results</strong> from output files once the job finishes</li>
+<li><strong>Debug</strong> failures with log files and <code>sacct</code> <!-- ::: --></li>
+</ol>
+</section>
+<section id="slurm-architecture" class="slide level2">
+<h2>Slurm Architecture</h2>
+<div class="cell" data-reveal="true" data-layout-align="center">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{ init: { "themeVariables": { "fontSize": "12px" }, "flowchart": { "nodeSpacing": 30, "rankSpacing": 60 } } }%%
+flowchart LR
+    U(["👤 User"]) -- sbatch / srun --&gt; LC["Login Node&lt;br/&gt;slurmctld"]
+    LC -- dispatches --&gt; N1["Compute Node&lt;br/&gt;slurmd"]
+    LC -- dispatches --&gt; N2["Compute Node&lt;br/&gt;slurmd"]
+    LC -- dispatches --&gt; N3["Compute Node&lt;br/&gt;slurmd"]
+    DB[("SlurmDB&lt;br/&gt;Accounting")] &lt;--&gt; LC
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<div style="font-size: 0.8em;">
+<ul>
+<li><strong>Login node</strong> — where users connect via SSH and submit jobs; never run heavy work here</li>
+<li><strong>Compute nodes</strong> — where jobs actually execute; managed by the <code>slurmd</code> daemon</li>
+<li><strong>SlurmDB</strong> — optional accounting database for job history and fairshare</li>
+<li><strong>slurmctld</strong> — central controller that manages job scheduling and resource allocation</li>
+</ul>
+</div>
+</section>
+<section id="sinfo-cluster-status" class="slide level2">
+<h2><code>sinfo</code>: Cluster status</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">[stud99@cascade-login</span> ~]$ sinfo</span>
+<span id="cb1-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">PARTITION</span>  AVAIL  TIMELIMIT  NODES  STATE NODELIST</span>
+<span id="cb1-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">cascade.p*</span>    up 1-00:00:00      1  maint cascade-003</span>
+<span id="cb1-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">cascade.p*</span>    up 1-00:00:00      3 drain<span class="pp">*</span> cascade-<span class="pp">[</span><span class="ss">012,028,030</span><span class="pp">]</span></span>
+<span id="cb1-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">cascade.p*</span>    up 1-00:00:00      7    mix cascade-<span class="pp">[</span><span class="ss">008,027,042,044,054</span><span class="pp">-</span><span class="ss">055,062</span><span class="pp">]</span></span>
+<span id="cb1-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">cascade.p*</span>    up 1-00:00:00    111  alloc cascade-<span class="pp">[</span><span class="ss">001</span><span class="pp">-</span><span class="ss">002,004</span><span class="pp">-</span><span class="ss">007,009</span><span class="pp">-</span><span class="ss">011,018</span><span class="pp">-</span><span class="ss">026,029,031</span><span class="pp">-</span><span class="ss">039,041,045,049</span><span class="pp">-</span><span class="ss">051,053,057,065</span><span class="pp">-</span><span class="ss">089,092,097</span><span class="pp">-</span><span class="ss">144,147</span><span class="pp">-</span><span class="ss">148</span><span class="pp">]</span></span>
+<span id="cb1-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">cascade.p*</span>    up 1-00:00:00     26   idle cascade-<span class="pp">[</span><span class="ss">013</span><span class="pp">-</span><span class="ss">017,040,043,046</span><span class="pp">-</span><span class="ss">048,052,056,058</span><span class="pp">-</span><span class="ss">061,063</span><span class="pp">-</span><span class="ss">064,090</span><span class="pp">-</span><span class="ss">091,093</span><span class="pp">-</span><span class="ss">096,145</span><span class="pp">-</span><span class="ss">146</span><span class="pp">]</span></span>
+<span id="cb1-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">debug.p</span>       up    1:00:00      2   idle cascade-<span class="pp">[</span><span class="ss">149</span><span class="pp">-</span><span class="ss">150</span><span class="pp">]</span></span>
+<span id="cb1-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">karl.p</span>        up 7-00:00:00      1    mix karl</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>STATE</code> column indicates whether nodes are idle, allocated, in maintenance, or in a mixed state (partially allocated).</p>
+</section>
+<section id="sbatch-defining-a-job" class="slide level2">
+<h2><code>sbatch</code>: Defining a Job</h2>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>job.sh</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="job.sh"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb2-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --job-name=test              # Job name</span></span>
+<span id="cb2-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition=cascade.p        # Partition to run on</span></span>
+<span id="cb2-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --nodes=1                    # Number of nodes</span></span>
+<span id="cb2-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --ntasks=1                   # Number of tasks per node</span></span>
+<span id="cb2-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --cpus-per-task=4            # Number of CPU cores per task</span></span>
+<span id="cb2-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --mem=8G                     # Memory per node</span></span>
+<span id="cb2-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time=00:30:00              # Walltime (hh:mm:ss)</span></span>
+<span id="cb2-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --output=test-%j.out         # Standard output (%j = job ID)</span></span>
+<span id="cb2-10"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># run your command</span></span>
+<span id="cb2-12"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Hello from node </span><span class="va">$(</span><span class="fu">hostname</span><span class="va">)</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li><code>#SBATCH</code> directives to specify job parameters</li>
+<li>Slurm will allocate the appropriate resources and execute the job</li>
+</ul>
+</section>
+<section id="sbatch-submit-a-job" class="slide level2">
+<h2><code>sbatch</code>: Submit a Job</h2>
+<p>The batch script can be submitted to the Slurm scheduler using the <code>sbatch</code> command:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> job.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>which will generate a confirmation message</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Submitted</span> batch job 18491592</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>indicating that the job was submitted with the <code>job ID</code> (here 18491592), which can be used to monitor the progress of the job.</p>
+</section>
+<section id="scontrol-monitor-job-status" class="slide level2">
+<h2><code>scontrol</code>: Monitor Job Status</h2>
+<p><code>scontrol</code> can be used to obtain more detailed information about a job:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">scontrol</span> show job <span class="op">&lt;</span>job-id<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Example output:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="va">JobId</span><span class="op">=</span>18491592 <span class="va">JobName</span><span class="op">=</span>hello_world</span>
+<span id="cb6-2"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">UserId</span><span class="op">=</span>stud99<span class="kw">(</span><span class="ex">20199</span><span class="kw">)</span> <span class="va">GroupId</span><span class="op">=</span>aliens<span class="kw">(</span><span class="ex">20000</span><span class="kw">)</span> <span class="va">MCS_label</span><span class="op">=</span>N/A</span>
+<span id="cb6-3"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Priority</span><span class="op">=</span>3865470565 <span class="va">Nice</span><span class="op">=</span>0 <span class="va">Account</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">QOS</span><span class="op">=</span>normal</span>
+<span id="cb6-4"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">JobState</span><span class="op">=</span>RUNNING <span class="va">Reason</span><span class="op">=</span>None <span class="va">Dependency</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span></span>
+<span id="cb6-5"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Requeue</span><span class="op">=</span>0 <span class="va">Restarts</span><span class="op">=</span>0 <span class="va">BatchFlag</span><span class="op">=</span>1 <span class="va">Reboot</span><span class="op">=</span>0 <span class="va">ExitCode</span><span class="op">=</span>0:0</span>
+<span id="cb6-6"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">RunTime</span><span class="op">=</span>00:00:11 <span class="va">TimeLimit</span><span class="op">=</span>00:05:00 <span class="va">TimeMin</span><span class="op">=</span>N/A</span>
+<span id="cb6-7"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">SubmitTime</span><span class="op">=</span>2026-02-20T14:51:17 <span class="va">EligibleTime</span><span class="op">=</span>2026-02-20T14:51:17</span>
+<span id="cb6-8"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">AccrueTime</span><span class="op">=</span>2026-02-20T14:51:17</span>
+<span id="cb6-9"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">StartTime</span><span class="op">=</span>2026-02-20T14:51:18 <span class="va">EndTime</span><span class="op">=</span>2026-02-20T14:56:18 <span class="va">Deadline</span><span class="op">=</span>N/A</span>
+<span id="cb6-10"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">SuspendTime</span><span class="op">=</span>None <span class="va">SecsPreSuspend</span><span class="op">=</span>0 <span class="va">LastSchedEval</span><span class="op">=</span>2026-02-20T14:51:18 <span class="va">Scheduler</span><span class="op">=</span>Main</span>
+<span id="cb6-11"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Partition</span><span class="op">=</span>cascade.p <span class="ex">AllocNode:Sid=cascade-login:1286819</span></span>
+<span id="cb6-12"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">ReqNodeList</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">ExcNodeList</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span></span>
+<span id="cb6-13"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">NodeList</span><span class="op">=</span>cascade-029</span>
+<span id="cb6-14"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">BatchHost</span><span class="op">=</span>cascade-029</span>
+<span id="cb6-15"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">NumNodes</span><span class="op">=</span>1 <span class="va">NumCPUs</span><span class="op">=</span>2 <span class="va">NumTasks</span><span class="op">=</span>1 <span class="ex">CPUs/Task=1</span> ReqB:S:C:T=0:0:<span class="pp">*</span>:<span class="pp">*</span></span>
+<span id="cb6-16"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">ReqTRES</span><span class="op">=</span>cpu=1,mem=100M,node=1,billing=1</span>
+<span id="cb6-17"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">AllocTRES</span><span class="op">=</span>cpu=2,node=1,billing=2</span>
+<span id="cb6-18"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="ex">Socks/Node=*</span> NtasksPerN:B:S:C=0:0:<span class="pp">*</span>:<span class="pp">*</span> CoreSpec=<span class="pp">*</span></span>
+<span id="cb6-19"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">MinCPUsNode</span><span class="op">=</span>1 <span class="va">MinMemoryNode</span><span class="op">=</span>100M <span class="va">MinTmpDiskNode</span><span class="op">=</span>0</span>
+<span id="cb6-20"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Features</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">DelayBoot</span><span class="op">=</span>00:00:00</span>
+<span id="cb6-21"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">OverSubscribe</span><span class="op">=</span>OK <span class="va">Contiguous</span><span class="op">=</span>0 <span class="va">Licenses</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">Network</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span></span>
+<span id="cb6-22"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Command</span><span class="op">=</span>/home/stud99/EDUCADO_Slurm_Workshop/hands-on/exercise_1/hello.sh</span>
+<span id="cb6-23"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">WorkDir</span><span class="op">=</span>/home/stud99/EDUCADO_Slurm_Workshop/hands-on/exercise_1</span>
+<span id="cb6-24"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">StdErr</span><span class="op">=</span>/home/stud99/EDUCADO_Slurm_Workshop/hands-on/exercise_1/hello_18491592.out</span>
+<span id="cb6-25"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">StdIn</span><span class="op">=</span>/dev/null</span>
+<span id="cb6-26"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">StdOut</span><span class="op">=</span>/home/stud99/EDUCADO_Slurm_Workshop/hands-on/exercise_1/hello_18491592.out</span>
+<span id="cb6-27"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Power</span><span class="op">=</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="srun-interactive-mode" class="slide level2">
+<h2><code>srun</code>: Interactive Mode</h2>
+<p>Sometimes you want to test things interactively. You can use <code>srun</code> for this:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">--partition</span><span class="op">=</span>cascade.q <span class="at">--time</span><span class="op">=</span>01:00:00 <span class="at">--pty</span> bash</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="fairshare-qos" class="slide level2 smaller">
+<h2>Fairshare &amp; QOS</h2>
+<p>Slurm calculates a <strong>priority score</strong> per job — weighted by <strong>Fairshare</strong>, <strong>QOS</strong>, age, and partition.</p>
+<p><strong>Fairshare</strong> — users who consumed <em>less</em> than their allocated share get a priority boost; heavy users are penalised.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sshare</span> <span class="at">-u</span> <span class="va">$USER</span>      <span class="co"># FairShare near 1.0 = under-used (↑ priority); near 0.0 = over-used (↓ priority)</span></span>
+<span id="cb8-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sprio</span> <span class="at">-j</span> <span class="op">&lt;</span>job_id<span class="op">&gt;</span>    <span class="co"># show full priority breakdown</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Quality of Service (QOS)</strong> — named policies set by admins that cap or boost jobs:</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>MaxWall</code></td>
+<td>Maximum walltime allowed</td>
+</tr>
+<tr class="even">
+<td><code>MaxTRESPerUser</code></td>
+<td>Cap on CPUs / GPUs / memory</td>
+</tr>
+<tr class="odd">
+<td><code>Priority</code></td>
+<td>Additive priority boost</td>
+</tr>
+<tr class="even">
+<td><code>Preempt</code></td>
+<td>Can this QOS preempt others?</td>
+</tr>
+</tbody>
+</table>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sacctmgr</span> show assoc user=<span class="va">$USER</span> format=Account,QOS   <span class="co"># which QOS you can use</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --qos=high_priority</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Why is my job still waiting?</strong></p>
+</div>
+<div class="callout-content">
+<p>High recent usage lowers your Fairshare score. Use <code>sprio -l</code> to see where your job ranks among all pending jobs.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="job-arrays" class="slide level2">
+<h2>Job Arrays</h2>
+<p>If you have a large number of similar jobs (e.g., parameter sweeps), you can use job arrays to submit them efficiently.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb11-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --array=0-9</span></span>
+<span id="cb11-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time=01:00:00</span></span>
+<span id="cb11-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --job-name=array_job</span></span>
+<span id="cb11-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Running task </span><span class="va">$SLURM_ARRAY_TASK_ID</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="mpi-with-slurm" class="slide level2">
+<h2>MPI with Slurm</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb12-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --nodes=2             # Request 2 nodes</span></span>
+<span id="cb12-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --ntasks-per-node=4   # Run 4 tasks per node (total 8 tasks)</span></span>
+<span id="cb12-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time=1:00:00        # Set a time limit to 1 hour</span></span>
+<span id="cb12-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load openmpi           <span class="co"># Load your MPI module</span></span>
+<span id="cb12-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> ./my_mpi_program         <span class="co"># srun handles the launching</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div title="Use `srun` (instead of `mpirun` or `mpiexec`) to launch parallel tasks across nodes.">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Use <code>srun</code> (instead of <code>mpirun</code> or <code>mpiexec</code>) to launch parallel tasks across nodes.</strong></p>
+</div>
+<div class="callout-content">
+<p>It directly communicates with Slurm to launch processes, propagates signals correctly (like cancelling a job), and ensures process binding respects your requests.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="gpu-jobs-with-slurm" class="slide level2">
+<h2>GPU Jobs with Slurm</h2>
+<p>GPUs are managed as <strong>Generic REsources (GRES)</strong> in Slurm.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --gres=gpu:a100:2       # 2× NVIDIA A100 per node</span></span>
+<span id="cb13-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --gres=gpu:v100:1       # 1× NVIDIA V100 per node</span></span>
+<span id="cb13-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --gres=gpu:rtx3090:4    # 4× RTX 3090 per node</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Find available GPU types with</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sinfo</span> <span class="at">-o</span> <span class="st">"%P %G"</span> <span class="kw">|</span> <span class="ex">column</span> <span class="at">-t</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Check actual GPU allocation inside your job</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$CUDA_VISIBLE_DEVICES</span>    <span class="co"># Slurm sets this automatically</span></span>
+<span id="cb15-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">nvidia-smi</span>                    <span class="co"># shows only your allocated GPUs</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="heterogeneous-jobs" class="slide level2 smaller">
+<h2>Heterogeneous Jobs</h2>
+<p>Sometimes a single job needs different resources for different parts (e.g., a master process on a CPU node and worker processes on GPU nodes).</p>
+<p><strong>Key Features:</strong></p>
+<ul>
+<li>Combine multiple job specifications into one valid job.</li>
+<li>Each component (pack group) has its own resources (nodes, memory, partition).</li>
+<li>Submitted as a single entity with one JOBID.</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb16-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition=genoa.p --nodes=2 --ntasks-per-node=32</span></span>
+<span id="cb16-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH hetjob</span></span>
+<span id="cb16-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition=genoa-deep.p --nodes=1 --gpus=4</span></span>
+<span id="cb16-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">--het-group</span><span class="op">=</span>0 ./preprocess</span>
+<span id="cb16-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">--het-group</span><span class="op">=</span>1 ./train</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<!-- ## hetjob vs packjob -->
+</section>
+<section id="slurm-rest-api" class="slide level2">
+<h2>Slurm REST API</h2>
+<ul>
+<li>Workflow managers and web portals submitting jobs on behalf of users</li>
+<li>CI/CD pipelines triggering HPC jobs automatically</li>
+<li>Monitoring dashboards polling job and node state</li>
+<li>Python scripts submitting jobs directly</li>
+</ul>
+<div style="font-size: 0.6em;">
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Endpoint</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>GET</code></td>
+<td><code>/slurm/v0.0.42/jobs</code></td>
+<td>List all jobs</td>
+</tr>
+<tr class="even">
+<td><code>GET</code></td>
+<td><code>/slurm/v0.0.42/job/{job_id}</code></td>
+<td>Get details of a specific job</td>
+</tr>
+<tr class="odd">
+<td><code>POST</code></td>
+<td><code>/slurm/v0.0.42/job/submit</code></td>
+<td>Submit a new job</td>
+</tr>
+<tr class="even">
+<td><code>DELETE</code></td>
+<td><code>/slurm/v0.0.42/job/{job_id}</code></td>
+<td>Cancel a job</td>
+</tr>
+<tr class="odd">
+<td><code>GET</code></td>
+<td><code>/slurm/v0.0.42/nodes</code></td>
+<td>List all nodes and their state</td>
+</tr>
+<tr class="even">
+<td><code>GET</code></td>
+<td><code>/slurm/v0.0.42/partitions</code></td>
+<td>List partitions</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="slurm-reservation" class="slide level2">
+<h2>Slurm Reservation</h2>
+<p>A <strong>reservation</strong> pre-allocates cluster resources (nodes, CPUs, time window) for exclusive use by a specific set of users or accounts.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">scontrol</span> show reservation  <span class="co"># List all reservations</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Our reservation is scheduled for March 5-6, 2026, reserving 10 nodes (200 cores):</p>
+<div style="font-size: 0.8em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="va">ReservationName</span><span class="op">=</span>aliens_99 <span class="va">StartTime</span><span class="op">=</span>2026-03-05T06:00:00 <span class="va">EndTime</span><span class="op">=</span>2026-03-06T06:00:00 <span class="va">Duration</span><span class="op">=</span>1-00:00:00</span>
+<span id="cb18-2"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Nodes</span><span class="op">=</span>cascade-<span class="pp">[</span><span class="ss">001</span><span class="pp">-</span><span class="ss">010</span><span class="pp">]</span> <span class="va">NodeCnt</span><span class="op">=</span>10 <span class="va">CoreCnt</span><span class="op">=</span>200 <span class="va">Features</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">PartitionName</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">Flags</span><span class="op">=</span>SPEC_NODES</span>
+<span id="cb18-3"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">TRES</span><span class="op">=</span>cpu=400</span>
+<span id="cb18-4"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Users</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">Groups</span><span class="op">=</span>aliens <span class="va">Accounts</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">Licenses</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">State</span><span class="op">=</span>INACTIVE <span class="va">BurstBuffer</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">Watts</span><span class="op">=</span>n/a</span>
+<span id="cb18-5"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">MaxStartDelay</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Users submit jobs into a reservation with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 job.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="slurm-with-containers" class="slide level2">
+<h2>Slurm with Containers</h2>
+<ul>
+<li>Ship complex software stacks in a portable container image</li>
+<li>Enable reproducible research and portable workflows</li>
+<li>Guarantee identical environments across development and production</li>
+</ul>
+<p><a href="https://apptainer.org/">Apptainer</a> is the <strong>de-facto standard</strong> on HPC clusters.</p>
+<div style="font-size: 0.6em;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb20-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --job-name=container_job</span></span>
+<span id="cb20-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --output=container_%j.out</span></span>
+<span id="cb20-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time=00:30:00</span></span>
+<span id="cb20-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --ntasks=1</span></span>
+<span id="cb20-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --cpus-per-task=4</span></span>
+<span id="cb20-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --mem=8G</span></span>
+<span id="cb20-8"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load apptainer</span>
+<span id="cb20-10"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-11"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">apptainer</span> exec <span class="at">--bind</span> /data:/data my_image.sif python3 /app/run.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="streamflow" class="slide level2">
+<h2>StreamFlow</h2>
+<ul>
+<li><a href="https://streamflow.di.unito.it/documentation/0.2/">StreamFlow</a> is a general framework for workflow orchestration</li>
+<li>Relies on the <a href="https://www.commonwl.org/">Common Workflow Language</a> (CWL)<br>
+and connects the CWL with a deployment model</li>
+<li>Workflows can be deployed to different environments:
+<ul>
+<li>Slurm</li>
+<li>Kubernetes</li>
+<li>Containers / Apptainer</li>
+</ul></li>
+<li>Designed for heterogeneous jobs with varying resource requirements</li>
+</ul>
+</section>
+<section id="common-workflow-language-cwl" class="slide level2">
+<h2>Common Workflow Language (CWL)</h2>
+<div class="quarto-layout-panel" data-layout="[1,1]">
+<div class="quarto-layout-row">
+<div class="n1 quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div style="font-size: 80%;">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>workflow.cwl</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21" data-filename="workflow.cwl"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb21-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span><span class="kw">:</span><span class="at"> Workflow</span></span>
+<span id="cb21-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">inputs</span><span class="kw">:</span></span>
+<span id="cb21-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">epochs</span><span class="kw">:</span><span class="at"> int</span></span>
+<span id="cb21-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">train_dataset</span><span class="kw">:</span><span class="at"> Directory</span></span>
+<span id="cb21-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">eval_dataset</span><span class="kw">:</span><span class="at"> Directory</span></span>
+<span id="cb21-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">train_script</span><span class="kw">:</span><span class="at"> File</span></span>
+<span id="cb21-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">eval_script</span><span class="kw">:</span><span class="at"> File</span></span>
+<span id="cb21-9"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">outputs</span><span class="kw">:</span></span>
+<span id="cb21-11"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">model</span><span class="kw">:</span></span>
+<span id="cb21-12"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> File</span></span>
+<span id="cb21-13"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">outputSource</span><span class="kw">:</span><span class="at"> train/model</span></span>
+<span id="cb21-14"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">accuracy</span><span class="kw">:</span></span>
+<span id="cb21-15"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> string</span></span>
+<span id="cb21-16"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">outputSource</span><span class="kw">:</span><span class="at"> eval/accuracy</span></span>
+<span id="cb21-17"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-18"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb21-19"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">train</span><span class="kw">:</span></span>
+<span id="cb21-20"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">run</span><span class="kw">:</span><span class="at"> train.cwl</span></span>
+<span id="cb21-21"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">in</span><span class="kw">:</span></span>
+<span id="cb21-22"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      train_script:train_script</span></span>
+<span id="cb21-23"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      epochs:epochs</span></span>
+<span id="cb21-24"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      dataset:train_dataset</span></span>
+<span id="cb21-25"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">out</span><span class="kw">:</span></span>
+<span id="cb21-26"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> model</span></span>
+<span id="cb21-27"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> loss</span></span>
+<span id="cb21-28"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">evaluate</span><span class="kw">:</span></span>
+<span id="cb21-29"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">run</span><span class="kw">:</span><span class="at"> eval.cwl</span></span>
+<span id="cb21-30"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">in</span><span class="kw">:</span></span>
+<span id="cb21-31"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      eval_script:eval_script</span></span>
+<span id="cb21-32"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      dataset:eval_dataset</span></span>
+<span id="cb21-33"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      model:train/model</span></span>
+<span id="cb21-34"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">out</span><span class="kw">:</span></span>
+<span id="cb21-35"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> accuracy</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<div class="n2 quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<ul>
+<li>Declare the workflow in a YAML file
+<ul>
+<li><code>inputs</code></li>
+<li><code>outputs</code></li>
+<li><code>steps</code></li>
+</ul></li>
+<li>Inputs and outputs are passed between steps and must be compatible</li>
+<li>Workflows can be shared and reused</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="streamflow-architecture" class="slide level2">
+<h2>StreamFlow Architecture</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/streamflow-model.png" class="quarto-figure quarto-figure-center" height="500"></p>
+</figure>
+</div>
+
+<aside><div>
+<p>From <a href="https://streamflow.di.unito.it/documentation/0.2/guide/architecture.html">StreamFlow documentation</a></p>
+</div></aside></section>
+<section id="streamflow-deployment" class="slide level2">
+<h2>StreamFlow Deployment</h2>
+<div class="quarto-layout-panel" data-layout="[1,1]">
+<div class="quarto-layout-row">
+<div class="n1 quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>streamflow_slurm.yaml</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22" data-filename="streamflow_slurm.yaml"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb22-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">workflows</span><span class="kw">:</span></span>
+<span id="cb22-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">  # same as left</span></span>
+<span id="cb22-3"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">deployments</span><span class="kw">:</span></span>
+<span id="cb22-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ssh-cascade</span><span class="kw">:</span></span>
+<span id="cb22-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> ssh</span></span>
+<span id="cb22-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">config</span><span class="kw">:</span></span>
+<span id="cb22-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">nodes</span><span class="kw">:</span></span>
+<span id="cb22-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">       </span><span class="kw">-</span><span class="at"> cascade-login.h-its.org</span></span>
+<span id="cb22-10"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">slurm</span><span class="kw">:</span></span>
+<span id="cb22-11"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> slurm</span></span>
+<span id="cb22-12"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">config</span><span class="kw">:</span></span>
+<span id="cb22-13"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">maxConcurrentJobs</span><span class="kw">:</span><span class="at"> </span><span class="dv">10</span></span>
+<span id="cb22-14"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb22-15"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">cascade</span><span class="kw">:</span></span>
+<span id="cb22-16"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">partition</span><span class="kw">:</span><span class="at"> cascade.p</span></span>
+<span id="cb22-17"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">nodes</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
+<span id="cb22-18"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">mem</span><span class="kw">:</span><span class="at"> 1gb</span></span>
+<span id="cb22-19"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">wraps</span><span class="kw">:</span><span class="at"> ssh-cascade</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div class="n2 quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<ul>
+<li>StreamFlow connects the CWL workflow to a deployment model</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="summary" class="slide level2">
+<h2>Summary</h2>
+<ul>
+<li><strong>SLURM</strong> is a widely used job scheduler that manages resource allocation and job scheduling on HPC clusters.</li>
+<li>Understanding the architecture of <strong>SLURM</strong> and how to submit and monitor jobs is essential for effectively utilizing HPC resources.</li>
+<li><strong>Containers / Apptainer</strong> can be used to create reproducible environments for HPC applications.</li>
+<li><strong>StreamFlow</strong> provides a framework for managing heterogeneous jobs with varying resource requirements.</li>
+</ul>
+</section>
+<section id="references" class="slide level2 smaller scrollable">
+<h2>References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Jette2023" class="csl-entry" role="listitem">
+Jette, Morris A., and Tim Wickberg. 2023. <span>“Architecture of&nbsp;the&nbsp;Slurm Workload Manager.”</span> In <em>Job Scheduling Strategies for Parallel Processing</em>, edited by Dalibor Klusáček, Julita Corbalán, and Gonzalo P. Rodrigo, 3–23. Cham: Springer Nature Switzerland.
+</div>
+<div id="ref-Yoo2003" class="csl-entry" role="listitem">
+Yoo, Andy B., Morris A. Jette, and Mark Grondona. 2003. <span>“SLURM: Simple Linux Utility for Resource Management.”</span> In <em>Job Scheduling Strategies for Parallel Processing</em>, edited by Dror Feitelson, Larry Rudolph, and Uwe Schwiegelshohn, 44–60. Berlin, Heidelberg: Springer Berlin Heidelberg.
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+</section>
+<section>
+<section id="hands-on-session" class="title-slide slide level1 center">
+<h1>Hands-on session</h1>
+
+</section>
+<section id="setup" class="slide level2">
+<h2>Setup</h2>
+<ul>
+<li>Login to the HITS Cascade cluster using the following command:</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-i</span> <span class="op">&lt;</span>path_to_your_private_key<span class="op">&gt;</span> <span class="op">&lt;</span>username<span class="op">&gt;</span>@cascade-login.h-its.org</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The username <code>studXX</code> and the private key were provided via email.</p>
+<ul>
+<li>Clone the Workshop Repository and navigate to the hands-on directory:</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/BerndDoser/EDUCADO_Slurm_Workshop.git</span>
+<span id="cb24-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> EDUCADO_Slurm_Workshop/hands-on</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="exercise-1-explore-the-cluster" class="slide level2 smaller">
+<h2>Exercise 1: Explore the cluster</h2>
+<p>Run the following commands and answer the questions below:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb25-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sinfo</span></span>
+<span id="cb25-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">squeue</span></span>
+<span id="cb25-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">scontrol</span> show partition</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Questions:</strong></p>
+<ul>
+<li>How many partitions does the cluster have? What are their names?</li>
+<li>How many nodes are in each partition?</li>
+<li>Are any jobs currently running? How can you tell?</li>
+<li>What is the maximum walltime allowed on the default partition?</li>
+</ul>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Try <code>sinfo -N -l</code> for a node-level view and <code>scontrol show partition &lt;name&gt;</code> for details on a specific partition.</strong></p>
+</div>
+<div class="callout-content">
+
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-2-write-your-first-batch-script" class="slide level2 smaller">
+<h2>Exercise 2: Write your first batch script</h2>
+<p>Submit and observe</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> hello.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Now <strong>quickly</strong> (within 30 seconds!) run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">squeue</span> <span class="at">-u</span> <span class="va">$USER</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Questions:</strong></p>
+<ul>
+<li>What is your job ID?</li>
+<li>What state is your job in? (<code>PD</code> = pending, <code>R</code> = running, <code>CG</code> = completing)</li>
+<li>On which node is it running?</li>
+</ul>
+<p>After the job completes, inspect the output:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> hello_<span class="op">&lt;</span>jobid<span class="op">&gt;</span>.out</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>Does the hostname match what <code>squeue</code> reported?</li>
+</ul>
+</section>
+<section id="exercise-3-submit-a-buggy-script" class="slide level2">
+<h2>Exercise 3: Submit a buggy script</h2>
+<p>Try to submit it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> buggy.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Questions:</strong></p>
+<ul>
+<li>Did the job submit successfully? What error did you get?</li>
+<li>Fix the <code>--partition</code> line (use a valid partition from Part A) and resubmit. What happens now?</li>
+<li>After it runs, check both <code>.out</code> and <code>.err</code> files. What error do you see?</li>
+<li>How would you fix the Python error?</li>
+</ul>
+</section>
+<section id="exercise-4-experiment-with-resources" class="slide level2">
+<h2>Exercise 4: Experiment with resources</h2>
+<p>Submit the script <code>resources.sh</code> and use <code>scontrol</code> to inspect:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> resources.sh</span>
+<span id="cb30-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">scontrol</span> show job <span class="op">&lt;</span>jobid<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Questions:</strong></p>
+<ul>
+<li>Find the <code>NumCPUs</code>, <code>MinMemoryNode</code>, and <code>TimeLimit</code> fields in the <code>scontrol</code> output. Do they match what you requested?</li>
+<li>What happens if you request more memory than the node has? Try changing <code>--mem=9999G</code> and resubmit. What error do you get?</li>
+</ul>
+</section>
+<section id="exercise-5-job-arrays" class="slide level2">
+<h2>Exercise 5: Job Arrays</h2>
+<p>You need to process 5 “datasets” (we’ll simulate them). Instead of submitting 5 separate jobs, you’ll use a <strong>job array</strong>.</p>
+<p><strong>Submit and monitor</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> array_job.sh</span>
+<span id="cb31-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">squeue</span> <span class="at">-u</span> <span class="va">$USER</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Questions:</strong></p>
+<ul>
+<li>How many jobs appear in <code>squeue</code>? What do the job IDs look like?</li>
+<li>What is the difference between <code>%A</code> and <code>%a</code> in the output filename?</li>
+<li>After all jobs complete, list the output files. Do you have 5 result files and 5 log files?</li>
+</ul>
+</section>
+<section id="exercise-6-mpi-job" class="slide level2">
+<h2>Exercise 6: MPI Job</h2>
+<p>You will compile and run a simple <strong>MPI Hello World</strong> program across multiple tasks.</p>
+<p><strong>Compile the program</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> hands-on/exercise_6</span>
+<span id="cb32-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicc</span> <span class="at">-o</span> mpi_hello mpi_hello.c</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Submit the job</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> mpi_job.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Questions:</strong></p>
+<ul>
+<li>How many lines appear in the output file? Does each MPI rank print its message?</li>
+<li>Which ranks run on which node? Do all ranks share the same node or are they spread across nodes?</li>
+<li>Change <code>--ntasks</code> to <code>8</code> and resubmit. How does the output change?</li>
+</ul>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Use <code>scontrol show job &lt;jobid&gt;</code> to verify how many tasks were allocated and on which nodes.</strong></p>
+</div>
+<div class="callout-content">
+
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-6-mpi-job---solution" class="slide level2">
+<h2>Exercise 6: MPI Job - Solution</h2>
+<p>Output:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> ID:        18512769</span>
+<span id="cb34-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Nodes:</span>         cascade-<span class="pp">[</span><span class="ss">127</span><span class="pp">-</span><span class="ss">128</span><span class="pp">]</span></span>
+<span id="cb34-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Total</span> tasks:   4</span>
+<span id="cb34-4"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from rank 0 of 4 on node cascade-127.cluster</span>
+<span id="cb34-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from rank 1 of 4 on node cascade-127.cluster</span>
+<span id="cb34-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from rank 3 of 4 on node cascade-128.cluster</span>
+<span id="cb34-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from rank 2 of 4 on node cascade-128.cluster</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<p><img src="images/HITS_RGB_eng.jpg" class="slide-logo"></p>
+<div class="footer footer-default">
+<p>EDUCADO: SLURM (B. Doser)</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="index_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="index_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="index_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="index_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="index_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="index_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="index_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="index_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":false},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1300,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

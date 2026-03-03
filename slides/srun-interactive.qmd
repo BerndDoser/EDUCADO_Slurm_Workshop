@@ -1,7 +1,0 @@
-## `srun`: Interactive Mode
-
-Sometimes you want to test things interactively. You can use `srun` for this:
-
-```bash
-srun --partition=cascade.q --time=01:00:00 --pty bash
-```

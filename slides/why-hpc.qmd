@@ -1,8 +1,0 @@
-## Why HPC?
-
-- Hundreds to thousands of CPU/GPU cores
-- Fast interconnects (InfiniBand **~400 GB/s**, NVLink **~3 TB/s**, etc.)
-- Shared, managed storage (**~9 PB** @ HITS, 417 TB GPUDirect Storage)
-- High-performance software stack (MPI, CUDA, optimized libraries)
-- Job scheduling and resource management (**SLURM**, PBS, etc.)
-- Access to specialized hardware (FPGAs, TPUs, etc.)
