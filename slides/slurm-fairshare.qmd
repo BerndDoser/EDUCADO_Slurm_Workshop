@@ -1,4 +1,4 @@
-## Fairshare {.smaller}
+## Fairshare {style="font-size: 0.8em;"}
 
 Fairshare ensures equitable cluster access by **prioritizing users who have used fewer resources** recently.
 
@@ -18,7 +18,7 @@ sprio -l -u $USER
 ```
 
 ::: {.callout-tip}
-Submit jobs when your fairshare score is high to get shorter wait times.
+## Submit jobs when your fairshare score is high to get shorter wait times.
 :::
 
 
