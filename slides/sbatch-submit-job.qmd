@@ -9,4 +9,4 @@ which will generate a confirmation message
 ```bash
 Submitted batch job 18491592
 ```
-indicating that the job was submitted with the `job ID`, which can be used to monitor or cancel the job.
+indicating that the job was submitted with the `JOBID`, which can be used to monitor or cancel the job.

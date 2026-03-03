@@ -6,6 +6,7 @@
 scontrol show job <job-id>
 ```
 
+::: {style="font-size: 0.5em;"}
 Example output:
 ```bash
 JobId=18491592 JobName=hello_world
@@ -36,3 +37,4 @@ JobId=18491592 JobName=hello_world
    StdOut=/home/stud99/EDUCADO_Slurm_Workshop/hands-on/exercise_1/hello_18491592.out
    Power=
 ```
+:::
