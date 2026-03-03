@@ -7,14 +7,10 @@ workflows:
       file: cwl/workflow.cwl
       settings: cwl/settings.yml
     bindings:
-      - step: /say_hello
+      - step: /
         target:
           deployment: slurm
           service: cascade
-      - step: /train
-        target:
-          deployment: slurm
-          service: cascade-gpu
 
 deployments:
   slurm:
@@ -25,9 +21,4 @@ deployments:
         cascade:
           partition: cascade.p
           nodes: "1"
-          mem: 1gb
-        cascade-gpu:
-          partition: cascade.p
-          nodes: "1"
-          gpus: "1"
           mem: 1gb
