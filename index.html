@@ -270,7 +270,7 @@ Bernd Doser
 <ul>
 <li>Hundreds to thousands of CPU/GPU cores</li>
 <li>Fast interconnects (InfiniBand <strong>~400 GB/s</strong>, NVLink <strong>~3 TB/s</strong>, etc.)</li>
-<li>Shared, managed storage (<strong>~9 PB</strong> @ HITS, 417 TB GPUDirect Storage)</li>
+<li>Shared, managed storage (<strong>~9 PB</strong> @ HITS, <strong>417 TB</strong> GPU Direct Storage)</li>
 <li>High-performance software stack (MPI, CUDA, optimized libraries)</li>
 <li>Job scheduling and resource management (<strong>SLURM</strong>, PBS, etc.)</li>
 <li>Access to specialized hardware (FPGAs, TPUs, etc.)</li>
@@ -280,10 +280,19 @@ Bernd Doser
 <h2>HITS Cascade Cluster <span style="font-size: 0.5em;">(used for hands-on session)</span></h2>
 <div class="columns">
 <div class="column" style="width:45%;">
-<p><img data-src="images/hits-cluster.jpg"></p>
+<p><img data-src="images/hits-cascade-cluster.jpg"></p>
 </div><div class="column" style="width:55%;">
-<p>The cluster provides over <strong>3,000 CPU cores</strong>, which can be used for general-purpose parallel workloads and CPU-bound applications.</p>
+<p>The <strong>Cascade cluster</strong> provides over <strong>3,000 CPU cores</strong>, which can be used for general-purpose parallel workloads and CPU-bound applications.</p>
 <p><strong>300 NVIDIA RTX 2080 Super GPUs</strong> makes it well-suited for molecular dynamics simulations, machine learning workflows, and large-scale linear algebra computations.</p>
+</div></div>
+</section>
+<section id="hits-genoa-cluster" class="slide level2">
+<h2>HITS Genoa Cluster</h2>
+<div class="columns">
+<div class="column" style="width:35%;">
+<p><img data-src="images/hits-genoa-cluster.jpg"></p>
+</div><div class="column" style="width:65%;">
+<p>The <strong>Genoa cluster</strong> represents the next generation of high-performance computing. Equipped with state-of-the-art <strong>AMD EPYC Genoa, Bergamo, and Rome processors</strong> as well as the latest <strong>NVIDIA H200 and A100 GPUs</strong>, it provides a versatile platform for both CPU-intensive and GPU-accelerated research workloads.</p>
 </div></div>
 </section>
 <section id="what-is-slurm" class="slide level2">
@@ -300,19 +309,6 @@ Bernd Doser
 <li>Supports priorities, reservations, and backfill scheduling</li>
 </ul>
 <p>SLURM is now part of NVIDIA’s HPC software stack (December 2025).</p>
-</section>
-<section id="the-typical-slurm-workflow" class="slide level2">
-<h2>The Typical SLURM Workflow</h2>
-<!-- ::: {.incremental} -->
-<ol type="1">
-<li><strong>SSH</strong> into the login node</li>
-<li><strong>Prepare</strong> your script or application</li>
-<li><strong>Write a batch script</strong> with <code>#SBATCH</code> resource directives</li>
-<li><strong>Submit</strong> with <code>sbatch job.sh</code> → receive a job ID</li>
-<li><strong>Monitor</strong> with <code>squeue</code>, <code>sinfo</code>, <code>scontrol show job &lt;id&gt;</code></li>
-<li><strong>Retrieve results</strong> from output files once the job finishes</li>
-<li><strong>Debug</strong> failures with log files and <code>sacct</code> <!-- ::: --></li>
-</ol>
 </section>
 <section id="slurm-architecture" class="slide level2">
 <h2>Slurm Architecture</h2>
@@ -342,6 +338,19 @@ flowchart LR
 <li><strong>slurmctld</strong> — central controller that manages job scheduling and resource allocation</li>
 </ul>
 </div>
+</section>
+<section id="the-typical-slurm-workflow" class="slide level2">
+<h2>The Typical SLURM Workflow</h2>
+<!-- ::: {.incremental} -->
+<ol type="1">
+<li><strong>SSH</strong> into the login node</li>
+<li><strong>Prepare</strong> your script or application</li>
+<li><strong>Write a batch script</strong> with <code>#SBATCH</code> resource directives</li>
+<li><strong>Submit</strong> with <code>sbatch job.sh</code> → receive a job ID</li>
+<li><strong>Monitor</strong> with <code>squeue</code>, <code>sinfo</code>, <code>scontrol show job &lt;id&gt;</code></li>
+<li><strong>Retrieve results</strong> from output files once the job finishes</li>
+<li><strong>Debug</strong> failures with log files and <code>sacct</code> <!-- ::: --></li>
+</ol>
 </section>
 <section id="sinfo-cluster-status" class="slide level2">
 <h2><code>sinfo</code>: Cluster status</h2>
@@ -388,86 +397,133 @@ flowchart LR
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Submitted</span> batch job 18491592</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>indicating that the job was submitted with the <code>job ID</code> (here 18491592), which can be used to monitor the progress of the job.</p>
 </section>
-<section id="scontrol-monitor-job-status" class="slide level2">
-<h2><code>scontrol</code>: Monitor Job Status</h2>
-<p><code>scontrol</code> can be used to obtain more detailed information about a job:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">scontrol</span> show job <span class="op">&lt;</span>job-id<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Example output:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="va">JobId</span><span class="op">=</span>18491592 <span class="va">JobName</span><span class="op">=</span>hello_world</span>
-<span id="cb6-2"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">UserId</span><span class="op">=</span>stud99<span class="kw">(</span><span class="ex">20199</span><span class="kw">)</span> <span class="va">GroupId</span><span class="op">=</span>aliens<span class="kw">(</span><span class="ex">20000</span><span class="kw">)</span> <span class="va">MCS_label</span><span class="op">=</span>N/A</span>
-<span id="cb6-3"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Priority</span><span class="op">=</span>3865470565 <span class="va">Nice</span><span class="op">=</span>0 <span class="va">Account</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">QOS</span><span class="op">=</span>normal</span>
-<span id="cb6-4"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">JobState</span><span class="op">=</span>RUNNING <span class="va">Reason</span><span class="op">=</span>None <span class="va">Dependency</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span></span>
-<span id="cb6-5"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Requeue</span><span class="op">=</span>0 <span class="va">Restarts</span><span class="op">=</span>0 <span class="va">BatchFlag</span><span class="op">=</span>1 <span class="va">Reboot</span><span class="op">=</span>0 <span class="va">ExitCode</span><span class="op">=</span>0:0</span>
-<span id="cb6-6"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">RunTime</span><span class="op">=</span>00:00:11 <span class="va">TimeLimit</span><span class="op">=</span>00:05:00 <span class="va">TimeMin</span><span class="op">=</span>N/A</span>
-<span id="cb6-7"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">SubmitTime</span><span class="op">=</span>2026-02-20T14:51:17 <span class="va">EligibleTime</span><span class="op">=</span>2026-02-20T14:51:17</span>
-<span id="cb6-8"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">AccrueTime</span><span class="op">=</span>2026-02-20T14:51:17</span>
-<span id="cb6-9"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">StartTime</span><span class="op">=</span>2026-02-20T14:51:18 <span class="va">EndTime</span><span class="op">=</span>2026-02-20T14:56:18 <span class="va">Deadline</span><span class="op">=</span>N/A</span>
-<span id="cb6-10"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">SuspendTime</span><span class="op">=</span>None <span class="va">SecsPreSuspend</span><span class="op">=</span>0 <span class="va">LastSchedEval</span><span class="op">=</span>2026-02-20T14:51:18 <span class="va">Scheduler</span><span class="op">=</span>Main</span>
-<span id="cb6-11"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Partition</span><span class="op">=</span>cascade.p <span class="ex">AllocNode:Sid=cascade-login:1286819</span></span>
-<span id="cb6-12"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">ReqNodeList</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">ExcNodeList</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span></span>
-<span id="cb6-13"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">NodeList</span><span class="op">=</span>cascade-029</span>
-<span id="cb6-14"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">BatchHost</span><span class="op">=</span>cascade-029</span>
-<span id="cb6-15"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">NumNodes</span><span class="op">=</span>1 <span class="va">NumCPUs</span><span class="op">=</span>2 <span class="va">NumTasks</span><span class="op">=</span>1 <span class="ex">CPUs/Task=1</span> ReqB:S:C:T=0:0:<span class="pp">*</span>:<span class="pp">*</span></span>
-<span id="cb6-16"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">ReqTRES</span><span class="op">=</span>cpu=1,mem=100M,node=1,billing=1</span>
-<span id="cb6-17"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">AllocTRES</span><span class="op">=</span>cpu=2,node=1,billing=2</span>
-<span id="cb6-18"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="ex">Socks/Node=*</span> NtasksPerN:B:S:C=0:0:<span class="pp">*</span>:<span class="pp">*</span> CoreSpec=<span class="pp">*</span></span>
-<span id="cb6-19"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">MinCPUsNode</span><span class="op">=</span>1 <span class="va">MinMemoryNode</span><span class="op">=</span>100M <span class="va">MinTmpDiskNode</span><span class="op">=</span>0</span>
-<span id="cb6-20"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Features</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">DelayBoot</span><span class="op">=</span>00:00:00</span>
-<span id="cb6-21"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">OverSubscribe</span><span class="op">=</span>OK <span class="va">Contiguous</span><span class="op">=</span>0 <span class="va">Licenses</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">Network</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span></span>
-<span id="cb6-22"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Command</span><span class="op">=</span>/home/stud99/EDUCADO_Slurm_Workshop/hands-on/exercise_1/hello.sh</span>
-<span id="cb6-23"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">WorkDir</span><span class="op">=</span>/home/stud99/EDUCADO_Slurm_Workshop/hands-on/exercise_1</span>
-<span id="cb6-24"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">StdErr</span><span class="op">=</span>/home/stud99/EDUCADO_Slurm_Workshop/hands-on/exercise_1/hello_18491592.out</span>
-<span id="cb6-25"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">StdIn</span><span class="op">=</span>/dev/null</span>
-<span id="cb6-26"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">StdOut</span><span class="op">=</span>/home/stud99/EDUCADO_Slurm_Workshop/hands-on/exercise_1/hello_18491592.out</span>
-<span id="cb6-27"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Power</span><span class="op">=</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="srun-interactive-mode" class="slide level2">
-<h2><code>srun</code>: Interactive Mode</h2>
-<p>Sometimes you want to test things interactively. You can use <code>srun</code> for this:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">--partition</span><span class="op">=</span>cascade.q <span class="at">--time</span><span class="op">=</span>01:00:00 <span class="at">--pty</span> bash</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="fairshare-qos" class="slide level2 smaller">
-<h2>Fairshare &amp; QOS</h2>
-<p>Slurm calculates a <strong>priority score</strong> per job — weighted by <strong>Fairshare</strong>, <strong>QOS</strong>, age, and partition.</p>
-<p><strong>Fairshare</strong> — users who consumed <em>less</em> than their allocated share get a priority boost; heavy users are penalised.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sshare</span> <span class="at">-u</span> <span class="va">$USER</span>      <span class="co"># FairShare near 1.0 = under-used (↑ priority); near 0.0 = over-used (↓ priority)</span></span>
-<span id="cb8-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sprio</span> <span class="at">-j</span> <span class="op">&lt;</span>job_id<span class="op">&gt;</span>    <span class="co"># show full priority breakdown</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Quality of Service (QOS)</strong> — named policies set by admins that cap or boost jobs:</p>
+<section id="squeue-monitor-the-job-queue" class="slide level2">
+<h2><code>squeue</code>: Monitor the Job Queue</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">[stud99@cascade-login</span> ~]$ squeue <span class="at">--me</span></span>
+<span id="cb5-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">JOBID</span>        PARTITION     NAME     USER ST       TIME  NODES NODELIST<span class="er">(</span><span class="ex">REASON</span><span class="kw">)</span></span>
+<span id="cb5-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">18491592</span>   cascade.p  hello_wo  stud99  R       0:11      1 cascade-029</span>
+<span id="cb5-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">18491601</span>   cascade.p  array_jo  stud99 PD       0:00      1 <span class="er">(</span><span class="ex">Priority</span><span class="kw">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div style="font-size: 0.6em;">
 <table class="caption-top">
 <thead>
 <tr class="header">
-<th>Parameter</th>
-<th>Effect</th>
+<th>Column</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>MaxWall</code></td>
-<td>Maximum walltime allowed</td>
+<td><code>JOBID</code></td>
+<td>Unique job identifier</td>
 </tr>
 <tr class="even">
-<td><code>MaxTRESPerUser</code></td>
-<td>Cap on CPUs / GPUs / memory</td>
+<td><code>ST</code></td>
+<td>State: <code>R</code> = Running, <code>PD</code> = Pending, <code>CG</code> = Completing</td>
 </tr>
 <tr class="odd">
-<td><code>Priority</code></td>
-<td>Additive priority boost</td>
+<td><code>TIME</code></td>
+<td>Elapsed run time</td>
 </tr>
 <tr class="even">
-<td><code>Preempt</code></td>
-<td>Can this QOS preempt others?</td>
+<td><code>NODELIST(REASON)</code></td>
+<td>Node(s) assigned, or reason if pending</td>
 </tr>
 </tbody>
 </table>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sacctmgr</span> show assoc user=<span class="va">$USER</span> format=Account,QOS   <span class="co"># which QOS you can use</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --qos=high_priority</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Useful options: <code>--me</code> (own jobs), <code>-u &lt;user&gt;</code>, <code>-p &lt;partition&gt;</code>, <code>--start</code> (estimated start time)</p>
+</section>
+<section id="scontrol-monitor-job-status" class="slide level2">
+<h2><code>scontrol</code>: Monitor Job Status</h2>
+<p><code>scontrol</code> can be used to obtain more detailed information about a job:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">scontrol</span> show job <span class="op">&lt;</span>job-id<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Example output:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="va">JobId</span><span class="op">=</span>18491592 <span class="va">JobName</span><span class="op">=</span>hello_world</span>
+<span id="cb7-2"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">UserId</span><span class="op">=</span>stud99<span class="kw">(</span><span class="ex">20199</span><span class="kw">)</span> <span class="va">GroupId</span><span class="op">=</span>aliens<span class="kw">(</span><span class="ex">20000</span><span class="kw">)</span> <span class="va">MCS_label</span><span class="op">=</span>N/A</span>
+<span id="cb7-3"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Priority</span><span class="op">=</span>3865470565 <span class="va">Nice</span><span class="op">=</span>0 <span class="va">Account</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">QOS</span><span class="op">=</span>normal</span>
+<span id="cb7-4"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">JobState</span><span class="op">=</span>RUNNING <span class="va">Reason</span><span class="op">=</span>None <span class="va">Dependency</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span></span>
+<span id="cb7-5"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Requeue</span><span class="op">=</span>0 <span class="va">Restarts</span><span class="op">=</span>0 <span class="va">BatchFlag</span><span class="op">=</span>1 <span class="va">Reboot</span><span class="op">=</span>0 <span class="va">ExitCode</span><span class="op">=</span>0:0</span>
+<span id="cb7-6"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">RunTime</span><span class="op">=</span>00:00:11 <span class="va">TimeLimit</span><span class="op">=</span>00:05:00 <span class="va">TimeMin</span><span class="op">=</span>N/A</span>
+<span id="cb7-7"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">SubmitTime</span><span class="op">=</span>2026-02-20T14:51:17 <span class="va">EligibleTime</span><span class="op">=</span>2026-02-20T14:51:17</span>
+<span id="cb7-8"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">AccrueTime</span><span class="op">=</span>2026-02-20T14:51:17</span>
+<span id="cb7-9"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">StartTime</span><span class="op">=</span>2026-02-20T14:51:18 <span class="va">EndTime</span><span class="op">=</span>2026-02-20T14:56:18 <span class="va">Deadline</span><span class="op">=</span>N/A</span>
+<span id="cb7-10"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">SuspendTime</span><span class="op">=</span>None <span class="va">SecsPreSuspend</span><span class="op">=</span>0 <span class="va">LastSchedEval</span><span class="op">=</span>2026-02-20T14:51:18 <span class="va">Scheduler</span><span class="op">=</span>Main</span>
+<span id="cb7-11"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Partition</span><span class="op">=</span>cascade.p <span class="ex">AllocNode:Sid=cascade-login:1286819</span></span>
+<span id="cb7-12"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">ReqNodeList</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">ExcNodeList</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span></span>
+<span id="cb7-13"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">NodeList</span><span class="op">=</span>cascade-029</span>
+<span id="cb7-14"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">BatchHost</span><span class="op">=</span>cascade-029</span>
+<span id="cb7-15"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">NumNodes</span><span class="op">=</span>1 <span class="va">NumCPUs</span><span class="op">=</span>2 <span class="va">NumTasks</span><span class="op">=</span>1 <span class="ex">CPUs/Task=1</span> ReqB:S:C:T=0:0:<span class="pp">*</span>:<span class="pp">*</span></span>
+<span id="cb7-16"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">ReqTRES</span><span class="op">=</span>cpu=1,mem=100M,node=1,billing=1</span>
+<span id="cb7-17"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">AllocTRES</span><span class="op">=</span>cpu=2,node=1,billing=2</span>
+<span id="cb7-18"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="ex">Socks/Node=*</span> NtasksPerN:B:S:C=0:0:<span class="pp">*</span>:<span class="pp">*</span> CoreSpec=<span class="pp">*</span></span>
+<span id="cb7-19"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">MinCPUsNode</span><span class="op">=</span>1 <span class="va">MinMemoryNode</span><span class="op">=</span>100M <span class="va">MinTmpDiskNode</span><span class="op">=</span>0</span>
+<span id="cb7-20"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Features</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">DelayBoot</span><span class="op">=</span>00:00:00</span>
+<span id="cb7-21"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">OverSubscribe</span><span class="op">=</span>OK <span class="va">Contiguous</span><span class="op">=</span>0 <span class="va">Licenses</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">Network</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span></span>
+<span id="cb7-22"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Command</span><span class="op">=</span>/home/stud99/EDUCADO_Slurm_Workshop/hands-on/exercise_1/hello.sh</span>
+<span id="cb7-23"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">WorkDir</span><span class="op">=</span>/home/stud99/EDUCADO_Slurm_Workshop/hands-on/exercise_1</span>
+<span id="cb7-24"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">StdErr</span><span class="op">=</span>/home/stud99/EDUCADO_Slurm_Workshop/hands-on/exercise_1/hello_18491592.out</span>
+<span id="cb7-25"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">StdIn</span><span class="op">=</span>/dev/null</span>
+<span id="cb7-26"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">StdOut</span><span class="op">=</span>/home/stud99/EDUCADO_Slurm_Workshop/hands-on/exercise_1/hello_18491592.out</span>
+<span id="cb7-27"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Power</span><span class="op">=</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="srun-interactive-mode" class="slide level2">
+<h2><code>srun</code>: Interactive Mode</h2>
+<p>Sometimes you want to test things interactively. You can use <code>srun</code> for this:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">--partition</span><span class="op">=</span>cascade.q <span class="at">--time</span><span class="op">=</span>01:00:00 <span class="at">--pty</span> bash</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="fairshare" class="slide level2 smaller">
+<h2>Fairshare</h2>
+<p>Fairshare ensures equitable cluster access by <strong>prioritizing users who have used fewer resources</strong> recently.</p>
+<p><span class="math display">\[
+\text{Priority} = w_{fs} \cdot F + w_{age} \cdot A + w_{qos} \cdot Q + \ldots
+\]</span></p>
+<ul>
+<li><strong>Fairshare score</strong> <span class="math inline">\(F \in [0, 1]\)</span>: closer to 1 means higher priority (less recent usage)</li>
+<li>Score decays over time — past usage matters less as time passes</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># View your fairshare score</span></span>
+<span id="cb9-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sshare</span> <span class="at">-u</span> <span class="va">$USER</span></span>
+<span id="cb9-3"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># See job priority breakdown for pending jobs</span></span>
+<span id="cb9-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sprio</span> <span class="at">-l</span> <span class="at">-u</span> <span class="va">$USER</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>Submit jobs when your fairshare score is high to get shorter wait times.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="quality-of-service-qos" class="slide level2 smaller">
+<h2>Quality of Service (QoS)</h2>
+<p>Most clusters use a standard set of QoS levels:</p>
+<div style="font-size: 0.8em;">
+<ul>
+<li><strong>debug</strong>: Very high priority, but very short walltime (e.g., 30 mins) and small node limits. Great for testing code before a big run.</li>
+<li><strong>normal</strong>: The default. Balanced priority and standard limits.</li>
+<li><strong>long</strong>: Lower priority, but allows jobs to run for 7+ days.</li>
+<li><strong>scavenger</strong>: Zero priority. Jobs only run if the cluster is empty, and they can be killed (preempted) the moment a “paying” job arrives.</li>
+</ul>
+</div>
+<!-- Available QoS options on your cluster:
+```bash
+sacctmgr show qos format=Name,Priority,MaxWall,Flags
+``` -->
+<p>To submit a job with a specific QoS:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--qos</span><span class="op">=</span>high_priority my_script.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-note no-icon callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
 <p><strong>Why is my job still waiting?</strong></p>
 </div>
 <div class="callout-content">
-<p>High recent usage lowers your Fairshare score. Use <code>sprio -l</code> to see where your job ranks among all pending jobs.</p>
+<p>High recent usage lowers your Fairshare score. Use <code>sprio -l -u $USER</code> to see where your job ranks among all pending jobs.</p>
 </div>
 </div>
 </div>
