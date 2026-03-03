@@ -24,5 +24,5 @@ Clone this repository to your cluster home directory:
 
 ```bash
 git clone https://github.com/BerndDoser/EDUCADO_Slurm_Workshop.git
-cd EDUCADO_Slurm_Workshop
+cd EDUCADO_Slurm_Workshop/hands-on
 ```
