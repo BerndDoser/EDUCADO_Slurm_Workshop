@@ -1,15 +1,24 @@
+## {.center}
+
+This workshop is available at [https://github.com/BerndDoser/EDUCADO_Slurm_Workshop](https://github.com/BerndDoser/EDUCADO_Slurm_Workshop)
+
+
 ## Agenda
 
-<!-- ::: {.incremental} -->
 - Slurm Basics
   - Understanding HPC Clusters, Partitions and Resources
   - Submitting Jobs and Monitoring Progress
   - Requesting resources (CPUs, memory, time)
+
+. . .
+
 - MPI with Slurm
   - Parallel jobs across multiple nodes
+
+. . .
+
 - Slurm with [StreamFlow](https://streamflow.di.unito.it/)
   - Heterogeneous jobs with different resource requirements
-<!-- ::: -->
 
 ---
 
