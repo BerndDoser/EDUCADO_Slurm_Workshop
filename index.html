@@ -395,7 +395,7 @@ flowchart LR
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> job.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>which will generate a confirmation message</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Submitted</span> batch job 18491592</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>indicating that the job was submitted with the <code>job ID</code> (here 18491592), which can be used to monitor the progress of the job.</p>
+<p>indicating that the job was submitted with the <code>job ID</code>, which can be used to monitor or cancel the job.</p>
 </section>
 <section id="squeue-monitor-the-job-queue" class="slide level2">
 <h2><code>squeue</code>: Monitor the Job Queue</h2>
@@ -468,8 +468,39 @@ flowchart LR
 </section>
 <section id="srun-interactive-mode" class="slide level2">
 <h2><code>srun</code>: Interactive Mode</h2>
-<p>Sometimes you want to test things interactively. You can use <code>srun</code> for this:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">--partition</span><span class="op">=</span>cascade.q <span class="at">--time</span><span class="op">=</span>01:00:00 <span class="at">--pty</span> bash</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Allocates a node and drops you into an <strong>interactive shell</strong> — useful for debugging, testing, or exploring the environment.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">--partition</span><span class="op">=</span>cascade.p <span class="at">--time</span><span class="op">=</span>01:00:00 <span class="at">--pty</span> bash</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Common options:</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>--pty bash</code></td>
+<td>Open an interactive terminal</td>
+</tr>
+<tr class="even">
+<td><code>--cpus-per-task=4</code></td>
+<td>Request multiple CPUs</td>
+</tr>
+<tr class="odd">
+<td><code>--mem=8G</code></td>
+<td>Request memory</td>
+</tr>
+<tr class="even">
+<td><code>--gres=gpu:1</code></td>
+<td>Request a GPU</td>
+</tr>
+<tr class="odd">
+<td><code>--x11</code></td>
+<td>Enable X11 forwarding</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="fairshare" class="slide level2 smaller">
 <h2>Fairshare</h2>
