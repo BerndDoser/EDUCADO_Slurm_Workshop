@@ -8,6 +8,7 @@
   - Kubernetes
   - Containers / Apptainer
 - Designed for heterogeneous jobs with varying resource requirements
+- Example for astronomy data processing pipelines: [LOFAR-VLBI Pilot](https://github.com/LOFAR-VLBI/pilot)
 
 
 ## Common Workflow Language (CWL)
