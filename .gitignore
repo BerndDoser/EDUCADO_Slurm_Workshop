@@ -1,7 +1,7 @@
-/.quarto/
+.venv/
 *_files/
 *.html
-
-**/*.quarto_ipynb
-hands-on/exercise_6/mpi_hello
 *.out
+**/*.quarto_ipynb
+/.quarto/
+hands-on/exercise_6/mpi_hello

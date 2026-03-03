@@ -1,0 +1,33 @@
+version: v1.0
+
+workflows:
+  workflow1:
+    type: cwl
+    config:
+      file: cwl/task_say_hello.cwl
+      settings: cwl/settings.yml
+    bindings:
+      - step: /say_hello
+        target:
+          deployment: slurm
+          service: cascade
+      - step: /train
+        target:
+          deployment: slurm
+          service: cascade-gpu
+
+deployments:
+  slurm:
+    type: slurm
+    config:
+      maxConcurrentJobs: 10
+      services:
+        cascade:
+          partition: cascade.p
+          nodes: "1"
+          mem: 1gb
+        cascade-gpu:
+          partition: cascade.p
+          nodes: "1"
+          gpus: "gpu:1"
+          mem: 1gb
