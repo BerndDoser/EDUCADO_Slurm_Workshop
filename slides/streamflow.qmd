@@ -78,18 +78,32 @@ From [StreamFlow documentation](https://streamflow.di.unito.it/documentation/0.2
 
 ## StreamFlow Deployment
 
+StreamFlow connects the CWL workflow to a deployment model
+
 ::: {layout='[1,1]'}
 ::: n1
-``` {.yaml filename="streamflow_slurm.yaml"}
+```yaml
 workflows:
-  # same as left
-
-deployments:
-  ssh-cascade:
-    type: ssh
+  workflow1:
+    type: cwl
     config:
-      nodes:
-       - cascade-login.h-its.org
+      file: cwl/workflow.cwl
+      settings: cwl/settings.yml
+    bindings:
+      - step: /train
+        target:
+          deployment: slurm
+          service: genoa-hopper-gpu
+      - step: /eval
+        target:
+          deployment: slurm
+          service: cascade
+```
+:::
+
+::: n2
+```yaml
+deployments:
   slurm:
     type: slurm
     config:
@@ -97,13 +111,13 @@ deployments:
       services:
         cascade:
           partition: cascade.p
-          nodes: 1
-          mem: 1gb
-    wraps: ssh-cascade
+          nodes: "1"
+          mem: 12gb
+        genoa-hopper-gpu:
+          partition: genoa-hopper.p
+          nodes: "1"
+          gpus: "h200:2"
+          mem: 96gb
 ```
-:::
-
-::: n2
-- StreamFlow connects the CWL workflow to a deployment model
 :::
 :::

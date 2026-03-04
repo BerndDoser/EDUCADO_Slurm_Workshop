@@ -22,6 +22,8 @@ streamflow run streamflow.yml
 
 ## Exercise 7: Streamflow - Solution
 
+::: {layout='[1,1]'}
+::: n1
 ```yaml
 workflows:
   ...
@@ -34,7 +36,11 @@ workflows:
         target:
           deployment: slurm
           service: cascade-gpu
+```
+:::
 
+::: n2
+```yaml
 deployments:
   slurm:
     ...
@@ -49,3 +55,5 @@ deployments:
           gpus: "1"
           mem: 1gb
 ```
+:::
+:::
