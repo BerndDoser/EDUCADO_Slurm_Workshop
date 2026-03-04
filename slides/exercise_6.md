@@ -1,4 +1,4 @@
-## Exercise 6: MPI Job
+## Exercise 6: MPI Job {.smaller}
 
 You will compile and run a simple **MPI Hello World** program across multiple tasks.
 
@@ -6,7 +6,8 @@ You will compile and run a simple **MPI Hello World** program across multiple ta
 
 ```bash
 cd hands-on/exercise_6
-mpicc -o mpi_hello mpi_hello.c
+. cascade-gompi-2025b.sh        # Load OpenMPI
+mpicc -o mpi_hello mpi_hello.c  # Compile
 ```
 
 **Submit the job**
@@ -20,10 +21,6 @@ sbatch --reservation=aliens_99 mpi_job.sh
 - How many lines appear in the output file? Does each MPI rank print its message?
 - Which ranks run on which node? Do all ranks share the same node or are they spread across nodes?
 - Change `--ntasks` to `8` and resubmit. How does the output change?
-
-::: {.callout-note icon=false}
-## Use `scontrol show job <jobid>` to verify how many tasks were allocated and on which nodes.
-:::
 
 
 ## Exercise 6: MPI Job - Solution
