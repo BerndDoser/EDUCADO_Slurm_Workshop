@@ -44,15 +44,21 @@ This workshop is available at [https://github.com/BerndDoser/EDUCADO_Slurm_Works
 {{< include slides/slurm-reservations.qmd >}}
 {{< include slides/slurm-containers.qmd >}}
 {{< include slides/streamflow.qmd >}}
+{{< include slides/hpc-vs-ai.qmd >}}
 
 ---
 
 ## Summary
 
+::: {.incremental}
 - **SLURM** is a widely used job scheduler that manages resource allocation and job scheduling on HPC clusters.
 - Understanding the architecture of **SLURM** and how to submit and monitor jobs is essential for effectively utilizing HPC resources.
 - **Containers / Apptainer** can be used to create reproducible environments for HPC applications.
 - **StreamFlow** provides a framework for managing heterogeneous jobs with varying resource requirements.
+- HPC and AI/ML workloads have different hardware and software requirements → [Slinky](https://slinky.schedmd.com)
+:::
+
+# Thank you for your attention!
 
 ## References
 
