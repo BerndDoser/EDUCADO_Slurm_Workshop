@@ -1,0 +1,14 @@
+## Slurm Tiny Helper
+
+- Cancel a running job: `scancel <jobid>`
+- Check past jobs (if available): `sacct -u $USER --starttime=today`
+- Email notifications:
+  ```bash
+  #SBATCH --mail-type=END  # or ALL
+  #SBATCH --mail-user=your@email.com
+  ```
+- Job dependency: Submit two jobs where the second only runs after the first succeeds:
+  ```bash
+  JOB1=$(sbatch --parsable hello.sh)
+  sbatch --dependency=afterok:$JOB1 hello.sh
+  ```

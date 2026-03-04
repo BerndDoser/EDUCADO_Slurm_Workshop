@@ -34,6 +34,7 @@ This workshop is available at [https://github.com/BerndDoser/EDUCADO_Slurm_Works
 {{< include slides/squeue.qmd >}}
 {{< include slides/scontrol.qmd >}}
 {{< include slides/srun-interactive.qmd >}}
+{{< include slides/slurm-tiny-helpers.qmd >}}
 {{< include slides/slurm-fairshare.qmd >}}
 {{< include slides/slurm-qos.qmd >}}
 {{< include slides/slurm-job-arrays.qmd >}}
@@ -74,3 +75,4 @@ This workshop is available at [https://github.com/BerndDoser/EDUCADO_Slurm_Works
 {{< include slides/exercise_4.md >}}
 {{< include slides/exercise_5.md >}}
 {{< include slides/exercise_6.md >}}
+{{< include slides/exercise_7.md >}}
