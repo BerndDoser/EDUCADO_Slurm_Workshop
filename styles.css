@@ -17,4 +17,9 @@
   height: 10% !important;
   max-height: unset !important;
 }
-
+.top_white {
+    color: white;
+    position: absolute;
+    top: -20px;
+    font-size: 30px;
+}
