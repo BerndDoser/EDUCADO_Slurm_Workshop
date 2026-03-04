@@ -508,6 +508,19 @@ flowchart LR
 </div>
 </div>
 </section>
+<section id="slurm-tiny-helper" class="slide level2">
+<h2>Slurm Tiny Helper</h2>
+<ul>
+<li><p>Cancel a running job: <code>scancel &lt;jobid&gt;</code></p></li>
+<li><p>Check past jobs (if available): <code>sacct -u $USER --starttime=today</code></p></li>
+<li><p>Email notifications:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --mail-type=</span><span class="re">END</span><span class="co">  # or ALL</span></span>
+<span id="cb9-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --mail-user=your@email.com</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>Job dependency: Submit two jobs where the second only runs after the first succeeds:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="va">JOB1</span><span class="op">=</span><span class="va">$(</span><span class="ex">sbatch</span> <span class="at">--parsable</span> hello.sh<span class="va">)</span></span>
+<span id="cb10-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--dependency</span><span class="op">=</span>afterok:<span class="va">$JOB1</span> hello.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+</ul>
+</section>
 <section id="fairshare" class="slide level2" style="font-size: 0.8em;">
 <h2>Fairshare</h2>
 <p>Fairshare ensures equitable cluster access by <strong>prioritizing users who have used fewer resources</strong> recently.</p>
@@ -518,11 +531,11 @@ flowchart LR
 <li><strong>Fairshare score</strong> <span class="math inline">\(F \in [0, 1]\)</span>: closer to 1 means higher priority (less recent usage)</li>
 <li>Score decays over time — past usage matters less as time passes</li>
 </ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># View your fairshare score</span></span>
-<span id="cb9-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sshare</span> <span class="at">-u</span> <span class="va">$USER</span></span>
-<span id="cb9-3"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># See job priority breakdown for pending jobs</span></span>
-<span id="cb9-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sprio</span> <span class="at">-l</span> <span class="at">-u</span> <span class="va">$USER</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># View your fairshare score</span></span>
+<span id="cb11-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sshare</span> <span class="at">-u</span> <span class="va">$USER</span></span>
+<span id="cb11-3"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># See job priority breakdown for pending jobs</span></span>
+<span id="cb11-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sprio</span> <span class="at">-l</span> <span class="at">-u</span> <span class="va">$USER</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-tip callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -553,7 +566,7 @@ flowchart LR
 sacctmgr show qos format=Name,Priority,MaxWall,Flags
 ``` -->
 <p>To submit a job with a specific QoS:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--qos</span><span class="op">=</span>high_priority my_script.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--qos</span><span class="op">=</span>high_priority my_script.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-note no-icon callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -568,22 +581,22 @@ sacctmgr show qos format=Name,Priority,MaxWall,Flags
 <section id="job-arrays" class="slide level2">
 <h2>Job Arrays</h2>
 <p>If you have a large number of similar jobs (e.g., parameter sweeps), you can use job arrays to submit them efficiently.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
-<span id="cb11-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --array=0-9</span></span>
-<span id="cb11-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time=01:00:00</span></span>
-<span id="cb11-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --job-name=array_job</span></span>
-<span id="cb11-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Running task </span><span class="va">$SLURM_ARRAY_TASK_ID</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb13-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --array=0-9</span></span>
+<span id="cb13-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time=01:00:00</span></span>
+<span id="cb13-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --job-name=array_job</span></span>
+<span id="cb13-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Running task </span><span class="va">$SLURM_ARRAY_TASK_ID</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="mpi-with-slurm" class="slide level2">
 <h2>MPI with Slurm</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
-<span id="cb12-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --nodes=2             # Request 2 nodes</span></span>
-<span id="cb12-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --ntasks-per-node=4   # Run 4 tasks per node (total 8 tasks)</span></span>
-<span id="cb12-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time=1:00:00        # Set a time limit to 1 hour</span></span>
-<span id="cb12-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load openmpi           <span class="co"># Load your MPI module</span></span>
-<span id="cb12-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> ./my_mpi_program         <span class="co"># srun handles the launching</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb14-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --nodes=2             # Request 2 nodes</span></span>
+<span id="cb14-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --ntasks-per-node=4   # Run 4 tasks per node (total 8 tasks)</span></span>
+<span id="cb14-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time=1:00:00        # Set a time limit to 1 hour</span></span>
+<span id="cb14-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load openmpi           <span class="co"># Load your MPI module</span></span>
+<span id="cb14-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> ./my_mpi_program         <span class="co"># srun handles the launching</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div title="Use `srun` (instead of `mpirun` or `mpiexec`) to launch parallel tasks across nodes.">
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
@@ -603,14 +616,14 @@ sacctmgr show qos format=Name,Priority,MaxWall,Flags
 <section id="gpu-jobs-with-slurm" class="slide level2">
 <h2>GPU Jobs with Slurm</h2>
 <p>GPUs are managed as <strong>Generic REsources (GRES)</strong> in Slurm.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --gres=gpu:a100:2       # 2× NVIDIA A100 per node</span></span>
-<span id="cb13-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --gres=gpu:v100:1       # 1× NVIDIA V100 per node</span></span>
-<span id="cb13-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --gres=gpu:rtx3090:4    # 4× RTX 3090 per node</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --gres=gpu:a100:2       # 2× NVIDIA A100 per node</span></span>
+<span id="cb15-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --gres=gpu:v100:1       # 1× NVIDIA V100 per node</span></span>
+<span id="cb15-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --gres=gpu:rtx3090:4    # 4× RTX 3090 per node</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Find available GPU types with</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sinfo</span> <span class="at">-o</span> <span class="st">"%P %G"</span> <span class="kw">|</span> <span class="ex">column</span> <span class="at">-t</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sinfo</span> <span class="at">-o</span> <span class="st">"%P %G"</span> <span class="kw">|</span> <span class="ex">column</span> <span class="at">-t</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Check actual GPU allocation inside your job</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$CUDA_VISIBLE_DEVICES</span>    <span class="co"># Slurm sets this automatically</span></span>
-<span id="cb15-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">nvidia-smi</span>                    <span class="co"># shows only your allocated GPUs</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$CUDA_VISIBLE_DEVICES</span>    <span class="co"># Slurm sets this automatically</span></span>
+<span id="cb17-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">nvidia-smi</span>                    <span class="co"># shows only your allocated GPUs</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="heterogeneous-jobs" class="slide level2 smaller">
 <h2>Heterogeneous Jobs</h2>
@@ -621,13 +634,13 @@ sacctmgr show qos format=Name,Priority,MaxWall,Flags
 <li>Each component (pack group) has its own resources (nodes, memory, partition).</li>
 <li>Submitted as a single entity with one JOBID.</li>
 </ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
-<span id="cb16-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition=genoa.p --nodes=2 --ntasks-per-node=32</span></span>
-<span id="cb16-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH hetjob</span></span>
-<span id="cb16-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition=genoa-deep.p --nodes=1 --gpus=4</span></span>
-<span id="cb16-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">--het-group</span><span class="op">=</span>0 ./preprocess</span>
-<span id="cb16-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">--het-group</span><span class="op">=</span>1 ./train</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb18-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition=genoa.p --nodes=2 --ntasks-per-node=32</span></span>
+<span id="cb18-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH hetjob</span></span>
+<span id="cb18-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition=genoa-deep.p --nodes=1 --gpus=4</span></span>
+<span id="cb18-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">--het-group</span><span class="op">=</span>0 ./preprocess</span>
+<span id="cb18-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">--het-group</span><span class="op">=</span>1 ./train</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <!-- ## hetjob vs packjob -->
 </section>
 <section id="slurm-rest-api" class="slide level2">
@@ -690,17 +703,17 @@ sacctmgr show qos format=Name,Priority,MaxWall,Flags
 <section id="slurm-reservation" class="slide level2">
 <h2>Slurm Reservation</h2>
 <p>A <strong>reservation</strong> pre-allocates cluster resources (nodes, CPUs, time window) for exclusive use by a specific set of users or accounts.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">scontrol</span> show reservation  <span class="co"># List all reservations</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">scontrol</span> show reservation  <span class="co"># List all reservations</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Our reservation of 10 nodes (200 cores):</p>
 <div style="font-size: 0.8em;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="va">ReservationName</span><span class="op">=</span>aliens_99 <span class="va">StartTime</span><span class="op">=</span>2026-03-05T06:00:00 <span class="va">EndTime</span><span class="op">=</span>2026-03-06T06:00:00 <span class="va">Duration</span><span class="op">=</span>1-00:00:00</span>
-<span id="cb18-2"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Nodes</span><span class="op">=</span>cascade-<span class="pp">[</span><span class="ss">001</span><span class="pp">-</span><span class="ss">010</span><span class="pp">]</span> <span class="va">NodeCnt</span><span class="op">=</span>10 <span class="va">CoreCnt</span><span class="op">=</span>200 <span class="va">Features</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">PartitionName</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">Flags</span><span class="op">=</span>SPEC_NODES</span>
-<span id="cb18-3"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">TRES</span><span class="op">=</span>cpu=400</span>
-<span id="cb18-4"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Users</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">Groups</span><span class="op">=</span>aliens <span class="va">Accounts</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">Licenses</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">State</span><span class="op">=</span>INACTIVE <span class="va">BurstBuffer</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">Watts</span><span class="op">=</span>n/a</span>
-<span id="cb18-5"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">MaxStartDelay</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="va">ReservationName</span><span class="op">=</span>aliens_99 <span class="va">StartTime</span><span class="op">=</span>2026-03-05T06:00:00 <span class="va">EndTime</span><span class="op">=</span>2026-03-06T06:00:00 <span class="va">Duration</span><span class="op">=</span>1-00:00:00</span>
+<span id="cb20-2"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Nodes</span><span class="op">=</span>cascade-<span class="pp">[</span><span class="ss">001</span><span class="pp">-</span><span class="ss">010</span><span class="pp">]</span> <span class="va">NodeCnt</span><span class="op">=</span>10 <span class="va">CoreCnt</span><span class="op">=</span>200 <span class="va">Features</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">PartitionName</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">Flags</span><span class="op">=</span>SPEC_NODES</span>
+<span id="cb20-3"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">TRES</span><span class="op">=</span>cpu=400</span>
+<span id="cb20-4"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">Users</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">Groups</span><span class="op">=</span>aliens <span class="va">Accounts</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">Licenses</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">State</span><span class="op">=</span>INACTIVE <span class="va">BurstBuffer</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span> <span class="va">Watts</span><span class="op">=</span>n/a</span>
+<span id="cb20-5"><a href="" aria-hidden="true" tabindex="-1"></a>   <span class="va">MaxStartDelay</span><span class="op">=</span><span class="va">(</span>null<span class="va">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Users submit jobs into a reservation with:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 job.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 job.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="slurm-with-containers" class="slide level2">
 <h2>Slurm with Containers</h2>
@@ -711,17 +724,17 @@ sacctmgr show qos format=Name,Priority,MaxWall,Flags
 </ul>
 <p><a href="https://apptainer.org/">Apptainer</a> is the <strong>de-facto standard</strong> on HPC clusters.</p>
 <div style="font-size: 0.6em;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
-<span id="cb20-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --job-name=container_job</span></span>
-<span id="cb20-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --output=container_%j.out</span></span>
-<span id="cb20-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time=00:30:00</span></span>
-<span id="cb20-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --ntasks=1</span></span>
-<span id="cb20-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --cpus-per-task=4</span></span>
-<span id="cb20-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --mem=8G</span></span>
-<span id="cb20-8"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load apptainer</span>
-<span id="cb20-10"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-11"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">apptainer</span> exec <span class="at">--bind</span> /data:/data my_image.sif python3 /app/run.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb22-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --job-name=container_job</span></span>
+<span id="cb22-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --output=container_%j.out</span></span>
+<span id="cb22-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time=00:30:00</span></span>
+<span id="cb22-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --ntasks=1</span></span>
+<span id="cb22-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --cpus-per-task=4</span></span>
+<span id="cb22-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --mem=8G</span></span>
+<span id="cb22-8"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load apptainer</span>
+<span id="cb22-10"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-11"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">apptainer</span> exec <span class="at">--bind</span> /data:/data my_image.sif python3 /app/run.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="streamflow" class="slide level2">
@@ -750,41 +763,41 @@ and connects the CWL with a deployment model</li>
 <div class="code-with-filename-file">
 <pre><strong>workflow.cwl</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21" data-filename="workflow.cwl"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb21-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span><span class="kw">:</span><span class="at"> Workflow</span></span>
-<span id="cb21-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">inputs</span><span class="kw">:</span></span>
-<span id="cb21-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">epochs</span><span class="kw">:</span><span class="at"> int</span></span>
-<span id="cb21-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">train_dataset</span><span class="kw">:</span><span class="at"> Directory</span></span>
-<span id="cb21-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">eval_dataset</span><span class="kw">:</span><span class="at"> Directory</span></span>
-<span id="cb21-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">train_script</span><span class="kw">:</span><span class="at"> File</span></span>
-<span id="cb21-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">eval_script</span><span class="kw">:</span><span class="at"> File</span></span>
-<span id="cb21-9"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-10"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">outputs</span><span class="kw">:</span></span>
-<span id="cb21-11"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">model</span><span class="kw">:</span></span>
-<span id="cb21-12"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> File</span></span>
-<span id="cb21-13"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">outputSource</span><span class="kw">:</span><span class="at"> train/model</span></span>
-<span id="cb21-14"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">accuracy</span><span class="kw">:</span></span>
-<span id="cb21-15"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> string</span></span>
-<span id="cb21-16"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">outputSource</span><span class="kw">:</span><span class="at"> eval/accuracy</span></span>
-<span id="cb21-17"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-18"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">steps</span><span class="kw">:</span></span>
-<span id="cb21-19"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">train</span><span class="kw">:</span></span>
-<span id="cb21-20"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">run</span><span class="kw">:</span><span class="at"> train.cwl</span></span>
-<span id="cb21-21"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">in</span><span class="kw">:</span></span>
-<span id="cb21-22"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      train_script:train_script</span></span>
-<span id="cb21-23"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      epochs:epochs</span></span>
-<span id="cb21-24"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      dataset:train_dataset</span></span>
-<span id="cb21-25"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">out</span><span class="kw">:</span></span>
-<span id="cb21-26"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> model</span></span>
-<span id="cb21-27"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> loss</span></span>
-<span id="cb21-28"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">evaluate</span><span class="kw">:</span></span>
-<span id="cb21-29"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">run</span><span class="kw">:</span><span class="at"> eval.cwl</span></span>
-<span id="cb21-30"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">in</span><span class="kw">:</span></span>
-<span id="cb21-31"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      eval_script:eval_script</span></span>
-<span id="cb21-32"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      dataset:eval_dataset</span></span>
-<span id="cb21-33"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      model:train/model</span></span>
-<span id="cb21-34"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">out</span><span class="kw">:</span></span>
-<span id="cb21-35"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> accuracy</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23" data-filename="workflow.cwl"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb23-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span><span class="kw">:</span><span class="at"> Workflow</span></span>
+<span id="cb23-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">inputs</span><span class="kw">:</span></span>
+<span id="cb23-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">epochs</span><span class="kw">:</span><span class="at"> int</span></span>
+<span id="cb23-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">train_dataset</span><span class="kw">:</span><span class="at"> Directory</span></span>
+<span id="cb23-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">eval_dataset</span><span class="kw">:</span><span class="at"> Directory</span></span>
+<span id="cb23-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">train_script</span><span class="kw">:</span><span class="at"> File</span></span>
+<span id="cb23-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">eval_script</span><span class="kw">:</span><span class="at"> File</span></span>
+<span id="cb23-9"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">outputs</span><span class="kw">:</span></span>
+<span id="cb23-11"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">model</span><span class="kw">:</span></span>
+<span id="cb23-12"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> File</span></span>
+<span id="cb23-13"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">outputSource</span><span class="kw">:</span><span class="at"> train/model</span></span>
+<span id="cb23-14"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">accuracy</span><span class="kw">:</span></span>
+<span id="cb23-15"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> string</span></span>
+<span id="cb23-16"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">outputSource</span><span class="kw">:</span><span class="at"> eval/accuracy</span></span>
+<span id="cb23-17"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-18"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb23-19"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">train</span><span class="kw">:</span></span>
+<span id="cb23-20"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">run</span><span class="kw">:</span><span class="at"> train.cwl</span></span>
+<span id="cb23-21"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">in</span><span class="kw">:</span></span>
+<span id="cb23-22"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      train_script:train_script</span></span>
+<span id="cb23-23"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      epochs:epochs</span></span>
+<span id="cb23-24"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      dataset:train_dataset</span></span>
+<span id="cb23-25"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">out</span><span class="kw">:</span></span>
+<span id="cb23-26"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> model</span></span>
+<span id="cb23-27"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> loss</span></span>
+<span id="cb23-28"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">evaluate</span><span class="kw">:</span></span>
+<span id="cb23-29"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">run</span><span class="kw">:</span><span class="at"> eval.cwl</span></span>
+<span id="cb23-30"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">in</span><span class="kw">:</span></span>
+<span id="cb23-31"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      eval_script:eval_script</span></span>
+<span id="cb23-32"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      dataset:eval_dataset</span></span>
+<span id="cb23-33"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      model:train/model</span></span>
+<span id="cb23-34"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">out</span><span class="kw">:</span></span>
+<span id="cb23-35"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> accuracy</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -816,38 +829,42 @@ and connects the CWL with a deployment model</li>
 </div></aside></section>
 <section id="streamflow-deployment" class="slide level2">
 <h2>StreamFlow Deployment</h2>
+<p>StreamFlow connects the CWL workflow to a deployment model</p>
 <div class="quarto-layout-panel" data-layout="[1,1]">
 <div class="quarto-layout-row">
 <div class="n1 quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="code-with-filename">
-<div class="code-with-filename-file">
-<pre><strong>streamflow_slurm.yaml</strong></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22" data-filename="streamflow_slurm.yaml"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb22-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">workflows</span><span class="kw">:</span></span>
-<span id="cb22-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">  # same as left</span></span>
-<span id="cb22-3"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">deployments</span><span class="kw">:</span></span>
-<span id="cb22-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ssh-cascade</span><span class="kw">:</span></span>
-<span id="cb22-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> ssh</span></span>
-<span id="cb22-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">config</span><span class="kw">:</span></span>
-<span id="cb22-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">nodes</span><span class="kw">:</span></span>
-<span id="cb22-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">       </span><span class="kw">-</span><span class="at"> cascade-login.h-its.org</span></span>
-<span id="cb22-10"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">slurm</span><span class="kw">:</span></span>
-<span id="cb22-11"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> slurm</span></span>
-<span id="cb22-12"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">config</span><span class="kw">:</span></span>
-<span id="cb22-13"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">maxConcurrentJobs</span><span class="kw">:</span><span class="at"> </span><span class="dv">10</span></span>
-<span id="cb22-14"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">services</span><span class="kw">:</span></span>
-<span id="cb22-15"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">cascade</span><span class="kw">:</span></span>
-<span id="cb22-16"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">partition</span><span class="kw">:</span><span class="at"> cascade.p</span></span>
-<span id="cb22-17"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">nodes</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
-<span id="cb22-18"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">mem</span><span class="kw">:</span><span class="at"> 1gb</span></span>
-<span id="cb22-19"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">wraps</span><span class="kw">:</span><span class="at"> ssh-cascade</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb24-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">workflows</span><span class="kw">:</span></span>
+<span id="cb24-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">workflow1</span><span class="kw">:</span></span>
+<span id="cb24-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> cwl</span></span>
+<span id="cb24-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">config</span><span class="kw">:</span></span>
+<span id="cb24-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">file</span><span class="kw">:</span><span class="at"> cwl/workflow.cwl</span></span>
+<span id="cb24-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">settings</span><span class="kw">:</span><span class="at"> cwl/settings.yml</span></span>
+<span id="cb24-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">bindings</span><span class="kw">:</span></span>
+<span id="cb24-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">step</span><span class="kw">:</span><span class="at"> /train</span></span>
+<span id="cb24-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">target</span><span class="kw">:</span></span>
+<span id="cb24-10"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">deployment</span><span class="kw">:</span><span class="at"> slurm</span></span>
+<span id="cb24-11"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">service</span><span class="kw">:</span><span class="at"> genoa-hopper-gpu</span></span>
+<span id="cb24-12"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">step</span><span class="kw">:</span><span class="at"> /eval</span></span>
+<span id="cb24-13"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">target</span><span class="kw">:</span></span>
+<span id="cb24-14"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">deployment</span><span class="kw">:</span><span class="at"> slurm</span></span>
+<span id="cb24-15"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">service</span><span class="kw">:</span><span class="at"> cascade</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="n2 quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<ul>
-<li>StreamFlow connects the CWL workflow to a deployment model</li>
-</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb25-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">deployments</span><span class="kw">:</span></span>
+<span id="cb25-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">slurm</span><span class="kw">:</span></span>
+<span id="cb25-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> slurm</span></span>
+<span id="cb25-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">config</span><span class="kw">:</span></span>
+<span id="cb25-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">maxConcurrentJobs</span><span class="kw">:</span><span class="at"> </span><span class="dv">10</span></span>
+<span id="cb25-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb25-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">cascade</span><span class="kw">:</span></span>
+<span id="cb25-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">partition</span><span class="kw">:</span><span class="at"> cascade.p</span></span>
+<span id="cb25-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">nodes</span><span class="kw">:</span><span class="at"> </span><span class="st">"1"</span></span>
+<span id="cb25-10"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">mem</span><span class="kw">:</span><span class="at"> 12gb</span></span>
+<span id="cb25-11"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">genoa-hopper-gpu</span><span class="kw">:</span></span>
+<span id="cb25-12"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">partition</span><span class="kw">:</span><span class="at"> genoa-hopper.p</span></span>
+<span id="cb25-13"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">nodes</span><span class="kw">:</span><span class="at"> </span><span class="st">"1"</span></span>
+<span id="cb25-14"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">gpus</span><span class="kw">:</span><span class="at"> </span><span class="st">"h200:2"</span></span>
+<span id="cb25-15"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">mem</span><span class="kw">:</span><span class="at"> 96gb</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -944,21 +961,21 @@ Yoo, Andy B., Morris A. Jette, and Mark Grondona. 2003. <span>“SLURM: Simple L
 <ul>
 <li>Login to the HITS Cascade cluster using the following command:</li>
 </ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-i</span> <span class="op">&lt;</span>path_to_your_private_key<span class="op">&gt;</span> <span class="op">&lt;</span>username<span class="op">&gt;</span>@cascade-extern.h-its.org</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-i</span> <span class="op">&lt;</span>path_to_your_private_key<span class="op">&gt;</span> <span class="op">&lt;</span>username<span class="op">&gt;</span>@cascade-extern.h-its.org</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The username <code>studXX</code> and the private key were provided via email.</p>
 <p><br></p>
 <ul>
 <li>Clone the Workshop Repository and navigate to the hands-on directory:</li>
 </ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/BerndDoser/EDUCADO_Slurm_Workshop.git</span>
-<span id="cb24-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> EDUCADO_Slurm_Workshop/hands-on</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/BerndDoser/EDUCADO_Slurm_Workshop.git</span>
+<span id="cb27-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> EDUCADO_Slurm_Workshop/hands-on</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="exercise-1-explore-the-cluster" class="slide level2 smaller">
 <h2>Exercise 1: Explore the cluster</h2>
 <p>Run the following commands and answer the questions below:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb25-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sinfo</span></span>
-<span id="cb25-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">squeue</span></span>
-<span id="cb25-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">scontrol</span> show partition</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sinfo</span></span>
+<span id="cb28-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">squeue</span></span>
+<span id="cb28-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">scontrol</span> show partition</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Questions:</strong></p>
 <ul>
 <li>How many partitions does the cluster have? What are their names?</li>
@@ -977,21 +994,25 @@ Yoo, Andy B., Morris A. Jette, and Mark Grondona. 2003. <span>“SLURM: Simple L
 </div>
 </div>
 </section>
-<section id="exercise-1-answers" class="slide level2 smaller">
-<h2>Exercise 1: Answers</h2>
+<section id="exercise-1-explore-the-cluster---solution" class="slide level2 smaller">
+<h2>Exercise 1: Explore the cluster - Solution</h2>
 <ul>
-<li>How many partitions does the cluster have? What are their names? cascade.p (default), debug.p, karl.p</li>
-<li>How many nodes are in each partition? cascade.p: 148 nodes, debug.p: 2 nodes, karl.p: 1 node</li>
-<li>Are any jobs currently running? How can you tell? The <code>squeue</code> command shows no active jobs in the queue.</li>
-<li>What is the maximum walltime allowed on the default partition? cascade.p has a maximum walltime of 24 hours. Default time limit is 2 hours.</li>
+<li><p>How many partitions does the cluster have? What are their names?</p>
+<p>cascade.p (default), debug.p, karl.p</p></li>
+<li><p>How many nodes are in each partition?</p>
+<p>cascade.p: 148 nodes, debug.p: 2 nodes, karl.p: 1 node</p></li>
+<li><p>Are any jobs currently running? How can you tell?</p>
+<p>The <code>squeue</code> command shows the jobs in the queue.</p></li>
+<li><p>What is the maximum walltime allowed on the default partition?</p>
+<p>cascade.p has a maximum walltime of 24 hours. Default time limit is 2 hours.</p></li>
 </ul>
 </section>
 <section id="exercise-2-write-your-first-batch-script" class="slide level2 smaller">
 <h2>Exercise 2: Write your first batch script</h2>
 <p>Submit and observe</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 hello.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 hello.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Now <strong>quickly</strong> (within 30 seconds!) run several times:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">squeue</span> <span class="at">-u</span> <span class="va">$USER</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">squeue</span> <span class="at">-u</span> <span class="va">$USER</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Questions:</strong></p>
 <ul>
 <li>What is your job ID?</li>
@@ -999,7 +1020,7 @@ Yoo, Andy B., Morris A. Jette, and Mark Grondona. 2003. <span>“SLURM: Simple L
 <li>On which node is it running?</li>
 </ul>
 <p>After the job completes, inspect the output:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> hello_<span class="op">&lt;</span>jobid<span class="op">&gt;</span>.out</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> hello_<span class="op">&lt;</span>jobid<span class="op">&gt;</span>.out</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>Does the hostname match what <code>squeue</code> reported?</li>
 </ul>
@@ -1007,7 +1028,7 @@ Yoo, Andy B., Morris A. Jette, and Mark Grondona. 2003. <span>“SLURM: Simple L
 <section id="exercise-3-submit-a-buggy-script" class="slide level2">
 <h2>Exercise 3: Submit a buggy script</h2>
 <p>Try to submit it:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 buggy.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 buggy.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Questions:</strong></p>
 <ul>
 <li>Did the job submit successfully? What error did you get?</li>
@@ -1019,8 +1040,8 @@ Yoo, Andy B., Morris A. Jette, and Mark Grondona. 2003. <span>“SLURM: Simple L
 <section id="exercise-4-experiment-with-resources" class="slide level2">
 <h2>Exercise 4: Experiment with resources</h2>
 <p>Submit the script <code>resources.sh</code> and use <code>scontrol</code> to inspect:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 resources.sh</span>
-<span id="cb30-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">scontrol</span> show job <span class="op">&lt;</span>jobid<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 resources.sh</span>
+<span id="cb33-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">scontrol</span> show job <span class="op">&lt;</span>jobid<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Questions:</strong></p>
 <ul>
 <li>Find the <code>NumCPUs</code>, <code>MinMemoryNode</code>, and <code>TimeLimit</code> fields in the <code>scontrol</code> output. Do they match what you requested?</li>
@@ -1031,8 +1052,8 @@ Yoo, Andy B., Morris A. Jette, and Mark Grondona. 2003. <span>“SLURM: Simple L
 <h2>Exercise 5: Job Arrays</h2>
 <p>You need to process 5 “datasets” (we’ll simulate them). Instead of submitting 5 separate jobs, you’ll use a <strong>job array</strong>.</p>
 <p><strong>Submit and monitor</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 array_job.sh</span>
-<span id="cb31-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">squeue</span> <span class="at">-u</span> <span class="va">$USER</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 array_job.sh</span>
+<span id="cb34-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">squeue</span> <span class="at">-u</span> <span class="va">$USER</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Questions:</strong></p>
 <ul>
 <li>How many jobs appear in <code>squeue</code>? What do the job IDs look like?</li>
@@ -1040,42 +1061,82 @@ Yoo, Andy B., Morris A. Jette, and Mark Grondona. 2003. <span>“SLURM: Simple L
 <li>After all jobs complete, list the output files. Do you have 5 result files and 5 log files?</li>
 </ul>
 </section>
-<section id="exercise-6-mpi-job" class="slide level2">
+<section id="exercise-6-mpi-job" class="slide level2 smaller">
 <h2>Exercise 6: MPI Job</h2>
 <p>You will compile and run a simple <strong>MPI Hello World</strong> program across multiple tasks.</p>
 <p><strong>Compile the program</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> hands-on/exercise_6</span>
-<span id="cb32-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicc</span> <span class="at">-o</span> mpi_hello mpi_hello.c</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> hands-on/exercise_6</span>
+<span id="cb35-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> cascade-gompi-2025b.sh        <span class="co"># Load OpenMPI</span></span>
+<span id="cb35-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicc</span> <span class="at">-o</span> mpi_hello mpi_hello.c  <span class="co"># Compile</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Submit the job</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 mpi_job.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 mpi_job.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Questions:</strong></p>
 <ul>
 <li>How many lines appear in the output file? Does each MPI rank print its message?</li>
 <li>Which ranks run on which node? Do all ranks share the same node or are they spread across nodes?</li>
 <li>Change <code>--ntasks</code> to <code>8</code> and resubmit. How does the output change?</li>
 </ul>
-<div class="callout callout-note no-icon callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<p><strong>Use <code>scontrol show job &lt;jobid&gt;</code> to verify how many tasks were allocated and on which nodes.</strong></p>
-</div>
-<div class="callout-content">
-
-</div>
-</div>
-</div>
 </section>
 <section id="exercise-6-mpi-job---solution" class="slide level2">
 <h2>Exercise 6: MPI Job - Solution</h2>
 <p>Output:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> ID:        18512769</span>
-<span id="cb34-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Nodes:</span>         cascade-<span class="pp">[</span><span class="ss">127</span><span class="pp">-</span><span class="ss">128</span><span class="pp">]</span></span>
-<span id="cb34-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Total</span> tasks:   4</span>
-<span id="cb34-4"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from rank 0 of 4 on node cascade-127.cluster</span>
-<span id="cb34-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from rank 1 of 4 on node cascade-127.cluster</span>
-<span id="cb34-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from rank 3 of 4 on node cascade-128.cluster</span>
-<span id="cb34-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from rank 2 of 4 on node cascade-128.cluster</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> ID:        18512769</span>
+<span id="cb37-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Nodes:</span>         cascade-<span class="pp">[</span><span class="ss">127</span><span class="pp">-</span><span class="ss">128</span><span class="pp">]</span></span>
+<span id="cb37-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Total</span> tasks:   4</span>
+<span id="cb37-4"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from rank 0 of 4 on node cascade-127.cluster</span>
+<span id="cb37-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from rank 1 of 4 on node cascade-127.cluster</span>
+<span id="cb37-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from rank 3 of 4 on node cascade-128.cluster</span>
+<span id="cb37-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from rank 2 of 4 on node cascade-128.cluster</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="exercise-7-streamflow" class="slide level2">
+<h2>Exercise 7: Streamflow</h2>
+<p><strong>Prepare the virtual environment</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load Python</span>
+<span id="cb38-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> venv .venv</span>
+<span id="cb38-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
+<span id="cb38-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Submit the job</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">streamflow</span> run streamflow.yml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Questions:</strong></p>
+<ul>
+<li>Separate the two steps into two different services. What changes do you need to make in the workflow and deployment definitions?</li>
+</ul>
+</section>
+<section id="exercise-7-streamflow---solution" class="slide level2">
+<h2>Exercise 7: Streamflow - Solution</h2>
+<div class="quarto-layout-panel" data-layout="[1,1]">
+<div class="quarto-layout-row">
+<div class="n1 quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb40-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">workflows</span><span class="kw">:</span></span>
+<span id="cb40-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  ...</span></span>
+<span id="cb40-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">bindings</span><span class="kw">:</span></span>
+<span id="cb40-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">step</span><span class="kw">:</span><span class="at"> /say_hello</span></span>
+<span id="cb40-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">target</span><span class="kw">:</span></span>
+<span id="cb40-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">deployment</span><span class="kw">:</span><span class="at"> slurm</span></span>
+<span id="cb40-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">service</span><span class="kw">:</span><span class="at"> cascade</span></span>
+<span id="cb40-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">step</span><span class="kw">:</span><span class="at"> /train</span></span>
+<span id="cb40-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">target</span><span class="kw">:</span></span>
+<span id="cb40-10"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">deployment</span><span class="kw">:</span><span class="at"> slurm</span></span>
+<span id="cb40-11"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">service</span><span class="kw">:</span><span class="at"> cascade-gpu</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="n2 quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb41-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">deployments</span><span class="kw">:</span></span>
+<span id="cb41-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">slurm</span><span class="kw">:</span></span>
+<span id="cb41-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    ...</span></span>
+<span id="cb41-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb41-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">cascade</span><span class="kw">:</span></span>
+<span id="cb41-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">partition</span><span class="kw">:</span><span class="at"> cascade.p</span></span>
+<span id="cb41-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">nodes</span><span class="kw">:</span><span class="at"> </span><span class="st">"1"</span></span>
+<span id="cb41-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">mem</span><span class="kw">:</span><span class="at"> 1gb</span></span>
+<span id="cb41-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">cascade-gpu</span><span class="kw">:</span></span>
+<span id="cb41-10"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">partition</span><span class="kw">:</span><span class="at"> cascade.p</span></span>
+<span id="cb41-11"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">nodes</span><span class="kw">:</span><span class="at"> </span><span class="st">"1"</span></span>
+<span id="cb41-12"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">gpus</span><span class="kw">:</span><span class="at"> </span><span class="st">"1"</span></span>
+<span id="cb41-13"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">mem</span><span class="kw">:</span><span class="at"> 1gb</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
 
 </section></section>
     </div>
