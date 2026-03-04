@@ -1037,7 +1037,7 @@ Yoo, Andy B., Morris A. Jette, and Mark Grondona. 2003. <span>“SLURM: Simple L
 <li>What is the hidden integer?</li>
 </ul>
 </section>
-<section id="exercise-4-experiment-with-resources" class="slide level2">
+<section id="exercise-4-experiment-with-resources" class="slide level2 smaller">
 <h2>Exercise 4: Experiment with resources</h2>
 <p>Submit the script <code>resources.sh</code> and use <code>scontrol</code> to inspect:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 resources.sh</span>
@@ -1046,14 +1046,39 @@ Yoo, Andy B., Morris A. Jette, and Mark Grondona. 2003. <span>“SLURM: Simple L
 <ul>
 <li>Find the <code>NumCPUs</code>, <code>MinMemoryNode</code>, and <code>TimeLimit</code> fields in the <code>scontrol</code> output. Do they match what you requested?</li>
 <li>What happens if you request more memory than the node has? Try changing <code>--mem=9999G</code> and resubmit. What error do you get?</li>
+<li>Request 1 and 2 GPUs and check the output of <code>nvidia-smi</code> in the job. Do you see the expected number of GPUs allocated to your job?</li>
 </ul>
+</section>
+<section id="exercise-4-resources---solution" class="slide level2">
+<h2>Exercise 4: Resources - Solution</h2>
+<p>scontrol output with <code>--mem=512M</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="va">RunTime</span><span class="op">=</span>00:00:20 <span class="va">TimeLimit</span><span class="op">=</span>00:02:00 <span class="va">TimeMin</span><span class="op">=</span>N/A</span>
+<span id="cb34-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="va">NumNodes</span><span class="op">=</span>1 <span class="va">NumCPUs</span><span class="op">=</span>2 <span class="va">NumTasks</span><span class="op">=</span>1 <span class="ex">CPUs/Task=2</span> ReqB:S:C:T=0:0:<span class="pp">*</span>:<span class="pp">*</span></span>
+<span id="cb34-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="va">MinCPUsNode</span><span class="op">=</span>2 <span class="va">MinMemoryNode</span><span class="op">=</span>512M <span class="va">MinTmpDiskNode</span><span class="op">=</span>0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>–mem=9999G:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch:</span> error: Memory specification can not be satisfied</span>
+<span id="cb35-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch:</span> error: Batch job submission failed: Requested node configuration is not available</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="nvidia-smi-output-with---gresgpu1" class="slide level2">
+<h2>nvidia-smi output with <code>--gres=gpu:1</code>:</h2>
+<pre><code>+-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 565.57.01              Driver Version: 565.57.01      CUDA Version: 12.7     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 2080 ...    On  |   00000000:17:00.0 Off |                  N/A |
+| 30%   29C    P8             16W /  250W |       1MiB /   8192MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+</code></pre>
 </section>
 <section id="exercise-5-job-arrays" class="slide level2">
 <h2>Exercise 5: Job Arrays</h2>
 <p>You need to process 5 “datasets” (we’ll simulate them). Instead of submitting 5 separate jobs, you’ll use a <strong>job array</strong>.</p>
 <p><strong>Submit and monitor</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 array_job.sh</span>
-<span id="cb34-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">squeue</span> <span class="at">-u</span> <span class="va">$USER</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 array_job.sh</span>
+<span id="cb37-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">squeue</span> <span class="at">-u</span> <span class="va">$USER</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Questions:</strong></p>
 <ul>
 <li>How many jobs appear in <code>squeue</code>? What do the job IDs look like?</li>
@@ -1065,11 +1090,11 @@ Yoo, Andy B., Morris A. Jette, and Mark Grondona. 2003. <span>“SLURM: Simple L
 <h2>Exercise 6: MPI Job</h2>
 <p>You will compile and run a simple <strong>MPI Hello World</strong> program across multiple tasks.</p>
 <p><strong>Compile the program</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> hands-on/exercise_6</span>
-<span id="cb35-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> cascade-gompi-2025b.sh        <span class="co"># Load OpenMPI</span></span>
-<span id="cb35-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicc</span> <span class="at">-o</span> mpi_hello mpi_hello.c  <span class="co"># Compile</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> hands-on/exercise_6</span>
+<span id="cb38-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> cascade-gompi-2025b.sh        <span class="co"># Load OpenMPI</span></span>
+<span id="cb38-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicc</span> <span class="at">-o</span> mpi_hello mpi_hello.c  <span class="co"># Compile</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Submit the job</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 mpi_job.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="at">--reservation</span><span class="op">=</span>aliens_99 mpi_job.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Questions:</strong></p>
 <ul>
 <li>How many lines appear in the output file? Does each MPI rank print its message?</li>
@@ -1080,24 +1105,24 @@ Yoo, Andy B., Morris A. Jette, and Mark Grondona. 2003. <span>“SLURM: Simple L
 <section id="exercise-6-mpi-job---solution" class="slide level2">
 <h2>Exercise 6: MPI Job - Solution</h2>
 <p>Output:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> ID:        18512769</span>
-<span id="cb37-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Nodes:</span>         cascade-<span class="pp">[</span><span class="ss">127</span><span class="pp">-</span><span class="ss">128</span><span class="pp">]</span></span>
-<span id="cb37-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Total</span> tasks:   4</span>
-<span id="cb37-4"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from rank 0 of 4 on node cascade-127.cluster</span>
-<span id="cb37-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from rank 1 of 4 on node cascade-127.cluster</span>
-<span id="cb37-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from rank 3 of 4 on node cascade-128.cluster</span>
-<span id="cb37-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from rank 2 of 4 on node cascade-128.cluster</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> ID:        18512769</span>
+<span id="cb40-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Nodes:</span>         cascade-<span class="pp">[</span><span class="ss">127</span><span class="pp">-</span><span class="ss">128</span><span class="pp">]</span></span>
+<span id="cb40-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Total</span> tasks:   4</span>
+<span id="cb40-4"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from rank 0 of 4 on node cascade-127.cluster</span>
+<span id="cb40-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from rank 1 of 4 on node cascade-127.cluster</span>
+<span id="cb40-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from rank 3 of 4 on node cascade-128.cluster</span>
+<span id="cb40-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from rank 2 of 4 on node cascade-128.cluster</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="exercise-7-streamflow" class="slide level2">
 <h2>Exercise 7: Streamflow</h2>
 <p><strong>Prepare the virtual environment</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load Python</span>
-<span id="cb38-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> venv .venv</span>
-<span id="cb38-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
-<span id="cb38-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load Python</span>
+<span id="cb41-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> venv .venv</span>
+<span id="cb41-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
+<span id="cb41-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Submit the job</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">streamflow</span> run streamflow.yml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb42-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="ex">streamflow</span> run streamflow.yml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Questions:</strong></p>
 <ul>
 <li>Separate the two steps into two different services. What changes do you need to make in the workflow and deployment definitions?</li>
@@ -1108,32 +1133,32 @@ Yoo, Andy B., Morris A. Jette, and Mark Grondona. 2003. <span>“SLURM: Simple L
 <div class="quarto-layout-panel" data-layout="[1,1]">
 <div class="quarto-layout-row">
 <div class="n1 quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb40-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">workflows</span><span class="kw">:</span></span>
-<span id="cb40-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  ...</span></span>
-<span id="cb40-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">bindings</span><span class="kw">:</span></span>
-<span id="cb40-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">step</span><span class="kw">:</span><span class="at"> /say_hello</span></span>
-<span id="cb40-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">target</span><span class="kw">:</span></span>
-<span id="cb40-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">deployment</span><span class="kw">:</span><span class="at"> slurm</span></span>
-<span id="cb40-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">service</span><span class="kw">:</span><span class="at"> cascade</span></span>
-<span id="cb40-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">step</span><span class="kw">:</span><span class="at"> /train</span></span>
-<span id="cb40-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">target</span><span class="kw">:</span></span>
-<span id="cb40-10"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">deployment</span><span class="kw">:</span><span class="at"> slurm</span></span>
-<span id="cb40-11"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">service</span><span class="kw">:</span><span class="at"> cascade-gpu</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb43-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">workflows</span><span class="kw">:</span></span>
+<span id="cb43-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  ...</span></span>
+<span id="cb43-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">bindings</span><span class="kw">:</span></span>
+<span id="cb43-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">step</span><span class="kw">:</span><span class="at"> /say_hello</span></span>
+<span id="cb43-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">target</span><span class="kw">:</span></span>
+<span id="cb43-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">deployment</span><span class="kw">:</span><span class="at"> slurm</span></span>
+<span id="cb43-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">service</span><span class="kw">:</span><span class="at"> cascade</span></span>
+<span id="cb43-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">step</span><span class="kw">:</span><span class="at"> /train</span></span>
+<span id="cb43-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">target</span><span class="kw">:</span></span>
+<span id="cb43-10"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">deployment</span><span class="kw">:</span><span class="at"> slurm</span></span>
+<span id="cb43-11"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">service</span><span class="kw">:</span><span class="at"> cascade-gpu</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="n2 quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb41-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">deployments</span><span class="kw">:</span></span>
-<span id="cb41-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">slurm</span><span class="kw">:</span></span>
-<span id="cb41-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    ...</span></span>
-<span id="cb41-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">services</span><span class="kw">:</span></span>
-<span id="cb41-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">cascade</span><span class="kw">:</span></span>
-<span id="cb41-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">partition</span><span class="kw">:</span><span class="at"> cascade.p</span></span>
-<span id="cb41-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">nodes</span><span class="kw">:</span><span class="at"> </span><span class="st">"1"</span></span>
-<span id="cb41-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">mem</span><span class="kw">:</span><span class="at"> 1gb</span></span>
-<span id="cb41-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">cascade-gpu</span><span class="kw">:</span></span>
-<span id="cb41-10"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">partition</span><span class="kw">:</span><span class="at"> cascade.p</span></span>
-<span id="cb41-11"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">nodes</span><span class="kw">:</span><span class="at"> </span><span class="st">"1"</span></span>
-<span id="cb41-12"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">gpus</span><span class="kw">:</span><span class="at"> </span><span class="st">"1"</span></span>
-<span id="cb41-13"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">mem</span><span class="kw">:</span><span class="at"> 1gb</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb44-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">deployments</span><span class="kw">:</span></span>
+<span id="cb44-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">slurm</span><span class="kw">:</span></span>
+<span id="cb44-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    ...</span></span>
+<span id="cb44-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb44-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">cascade</span><span class="kw">:</span></span>
+<span id="cb44-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">partition</span><span class="kw">:</span><span class="at"> cascade.p</span></span>
+<span id="cb44-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">nodes</span><span class="kw">:</span><span class="at"> </span><span class="st">"1"</span></span>
+<span id="cb44-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">mem</span><span class="kw">:</span><span class="at"> 1gb</span></span>
+<span id="cb44-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">cascade-gpu</span><span class="kw">:</span></span>
+<span id="cb44-10"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">partition</span><span class="kw">:</span><span class="at"> cascade.p</span></span>
+<span id="cb44-11"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">nodes</span><span class="kw">:</span><span class="at"> </span><span class="st">"1"</span></span>
+<span id="cb44-12"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">gpus</span><span class="kw">:</span><span class="at"> </span><span class="st">"1"</span></span>
+<span id="cb44-13"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">mem</span><span class="kw">:</span><span class="at"> 1gb</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
