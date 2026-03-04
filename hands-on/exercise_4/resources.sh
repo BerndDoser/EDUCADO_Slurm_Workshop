@@ -10,11 +10,5 @@ echo "CPUs allocated: $SLURM_CPUS_PER_TASK"
 echo "Memory requested: $SLURM_MEM_PER_NODE MB"
 echo "Node: $(hostname)"
 
-# Show actual CPU info available
-nproc
-lscpu | grep "^CPU(s):"
-
-# Check memory
-free -h
-
-echo "Job completed at $(date)"
+sleep 30  # Keep the job alive so you can observe it
+echo "Done sleeping. Goodbye!"
